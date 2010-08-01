@@ -55,6 +55,7 @@ CIMaestro has the following major features:
 == REQUIREMENTS:
 
 * Ruby... :)
+* bundler gem
 * All the 3rd tools that you want to use in your build process
 
 == INSTALL:
