@@ -36,15 +36,13 @@ CIMaestro has the following major features:
     * Compiles you sources
 * .Net specific
     * Ensures all your .Net artifacts share common assembly attributes like version or copyright notices
-    * Creates a version binding policy for your strong named assemblies (useful when you want to ensure your team uses a
-    certain version of an assembly)
+    * Creates a version binding policy for your strong named assemblies (useful when you want to ensure your team uses a certain version of an assembly)
 * Quality assurance
     * Runs Unit Tests (including Javascript)
     * Does a static analysis of the sources
     * Gathers metrics from the sources
     * Is is possible to set thresholds that must be met for the build to be successful
-    * The thresholds are updated automatically when you raise the base. If you achieve a certain quality, you don't want
-    to let it degrade
+    * The thresholds are updated automatically when you raise the base. If you achieve a certain quality, you don't want to let it degrade
 * Publishing
     * Puts you artifacts on a well-know location with a consistent structure
 
