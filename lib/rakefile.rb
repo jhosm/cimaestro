@@ -183,7 +183,7 @@ task :setup_default_tasks => :setup_custom_specs do
   else
     $registry[:get_sources] ||= GetSvnSourcesTask
   end
-  if ENV["CCNetRequestSource"] == "IntervalTrigger" && ENV["CODELINE"] != "Release" then
+  if ENV["TRIGGER"] == "IntervalTrigger" && ENV["CODELINE"] != "Release" then
     $registry[:publish] ||= NullTask
     $registry[:purge] ||= NullTask
     $registry[:merge_xsl_files] ||= NullTask
@@ -210,12 +210,12 @@ task :load_customs_specs => :setup_build_spec do
   $: << $registry[:build_spec].build_scripts_dir_path
 
   customs_specs_path = File.join($registry[:build_spec].build_scripts_dir_path, $registry[:build_spec].system_name + "_rakefile.rb")
-  load customs_specs_path if File.exists?(customs_specs_path)
+  import customs_specs_path if File.exists?(customs_specs_path)
 end
 
 desc "Prepares build, by creating a Build Specification and the Logger.\n"
 task :setup_build_spec do
-  build_spec = BuildSpec.new(ENV["SYSTEM"], ENV["CODELINE"], ENV["CCNetLabel"])
+  build_spec = BuildSpec.new(ENV["SYSTEM"], ENV["CODELINE"], ENV["VERSION"])
   build_spec.base_path = ENV["BASE_PATH"] if ENV["BASE_PATH"] != nil
   runtime_spec = BuildSpec.new("STQRuntime", ENV["CODELINE"])
   runtime_spec.base_path = ENV["BASE_PATH"] if ENV["BASE_PATH"] != nil

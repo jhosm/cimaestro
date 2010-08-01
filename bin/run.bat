@@ -1,1 +1,1 @@
-rake SYSTEM=%1 CODELINE=%2 CCNetLabel=1.2.3.4 BASE_PATH=../../../../../_Projectos CCNetRequestSource=ForceBuild BUILD_TYPE=local  %3 %4 %5
+rake SYSTEM=%1 CODELINE=%2 VERSION=1.2.3.4 BASE_PATH=../../../../../_Projectos TRIGGER=ForceBuild BUILD_TYPE=local  %3 %4 %5

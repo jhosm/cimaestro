@@ -48,7 +48,6 @@ spec/TestSourceFiles/24-issues-report-fxcop.xml
 spec/TestSourceFiles/25-issues-report-fxcop.xml
 spec/TestSourceFiles/3-issues-report-fxcop.xml
 spec/TestSourceFiles/4-issues-report-fxcop.xml
-vendor/cache/bundler-0.9.26.gem
 vendor/cache/diff-lcs-1.1.2.gem
 vendor/cache/hoe-2.6.1.gem
 vendor/cache/json_pure-1.4.3.gem

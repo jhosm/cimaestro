@@ -1,3 +1,7 @@
+module BuildTrigger
+  FORCED = "forced"
+end
+
 module ProjectType
   ACTIVITIES_ASSEMBLY = "ACT"
   ASSEMBLY = "ASM"
