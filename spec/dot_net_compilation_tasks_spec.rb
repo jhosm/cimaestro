@@ -2,8 +2,7 @@ require "spec_helper"
 
 describe CompileDotNetTask do
   before(:each) do
-    @build_spec = BuildSpec.new("Dummy_cimaestro", "Release", "4.5.8.7")
-    @build_spec.base_path = TESTS_BASE_PATH
+    @build_spec = BuildSpec.new(TESTS_BASE_PATH, "Dummy_cimaestro", "Release", "4.5.8.7")
     @compile = CompileDotNetTask.new :compile_dot_net_solutions, @build_spec, NullLogger.new
     rm_rf @build_spec.working_dir_path
   end
@@ -50,8 +49,7 @@ end
 
 describe SetCommonAssemblyAttributesTask do
   before(:each) do
-    @build_spec = BuildSpec.new("Dummy_cimaestro", "Release", "4.5.6.7")
-    @build_spec.base_path = TESTS_BASE_PATH
+    @build_spec = BuildSpec.new(TESTS_BASE_PATH, "Dummy_cimaestro", "Release", "4.5.6.7")
     @common_attr_task = SetCommonAssemblyAttributesTask.new :common_attributes, @build_spec, NullLogger.new
     SystemFileStructureMocker.create_working_dir_with_projects(@build_spec, ProjectType::ASSEMBLY + "-Sample")
     @common_attr_task.setup
@@ -76,8 +74,7 @@ end
 
 describe CreateStrongNamedAssemblyPolicyTask do
   before(:each) do
-    @build_spec = BuildSpec.new("Dummy_cimaestro", "Release", "4.5.6.7")
-    @build_spec.base_path = TESTS_BASE_PATH
+    @build_spec = BuildSpec.new(TESTS_BASE_PATH, "Dummy_cimaestro", "Release", "4.5.6.7")
     @task = CreateStrongNamedAssemblyPolicyTask.new :common_attributes, @build_spec, NullLogger.new
     @task.setup
   end
@@ -135,7 +132,7 @@ describe CreateStrongNamedAssemblyPolicyTask do
     file = mock("config_file", :null_object => true)
     File.stub!(:open)
     @task.should_receive(:sh).
-            with(/.+al \/link:.+policy.4.5.MyStrongNamedAssembly.config \/out:.+policy.4.5.MyStrongNamedAssembly.dll \/keyfile:.+bancobpi.dnc.snk/).
+            with(/.+al \/link:.+policy.4.5.MyStrongNamedAssembly.config \/out:.+policy.4.5.MyStrongNamedAssembly.dll \/keyfile:.+cimaestro..snk/).
             once
 
     @task.execute

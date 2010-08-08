@@ -20,6 +20,8 @@ class CommandLineParser
     options.trigger = BuildTrigger::FORCED
     options.version = "0.0.0.0"
     options.setup = false
+    options.build = false
+    options.directory_structure = ""
 
     opts = OptionParser.new do |opts|
 
@@ -29,6 +31,10 @@ class CommandLineParser
 
       opts.on('-v', '--verbose', 'Output more information') do
         options.verbose = true
+      end
+
+      opts.on('-b', '--build', 'Do a build') do
+        options.build = true
       end
 
       opts.on('-S NAME', '--system NAME', 'The NAME of the system to be built') do |name|
@@ -55,7 +61,10 @@ class CommandLineParser
         options.version=version_number
       end
 
-      # Define the options, and what they do
+      opts.on('-d DIRECTORY_STRUCTURE','--directory_structure DIRECTORY_STRUCTURE', 'The name of the Ruby class which defines', 'the directory structure.', 'Check CIMaestro::BuildConfiguration::DefaultDirectoryStructure docs.') do |directory_structure|
+        options.directory_structure=directory_structure
+      end
+      
       opts.on('-s', '--setup [GEM_HOME]', 'Setup cimaestro environment,',
               'If GEM_HOME is not specified, bundler\'s',
               'default will be used.') do |gem_home|
@@ -71,7 +80,7 @@ class CommandLineParser
       end
 
       opts.on_tail('-V', '--version', "Show version") do
-        puts CIMaestro::VERSION
+        puts CIMaestro::CIMaestro::VERSION
         exit
       end
     end
@@ -91,17 +100,23 @@ if options.setup then
   end
 end
 
-if options.system_name.empty?
-  puts "Please specify --system NAME."
-  exit 1
-end
-if options.codeline_name.empty?
-  puts "Please specify --codeline NAME."
-  exit 1
+if options.build then
+
+  if options.system_name.empty?
+    puts "Please specify --system NAME."
+    exit 1
+  end
+  if options.codeline_name.empty?
+    puts "Please specify --codeline NAME."
+    exit 1
+  end
+
+  FileUtils.cd(options.base_path, :verbose => true) do
+    cmd = "rake SYSTEM=#{options.system_name} CODELINE=#{options.codeline_name} VERSION=#{options.version} BASE_PATH=#{options.base_path} TRIGGER=#{options.trigger} DIRECTORY_STRUCTURE=#{options.directory_structure} #{options.task_name}"
+    puts cmd
+    exit(system(cmd))
+  end
 end
 
-FileUtils.cd(options.base_path, :verbose => true) do 
-  cmd = "rake SYSTEM=#{options.system_name} CODELINE=#{options.codeline_name} VERSION=#{options.version} BASE_PATH=#{options.base_path} TRIGGER=#{options.trigger} #{options.task_name}"
-  puts cmd
-  exit(system(cmd))
-end
+puts 'Nothing to do... Make sure you\'ve set --setup or --build.'
+puts opts

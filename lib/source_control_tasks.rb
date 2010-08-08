@@ -1,4 +1,6 @@
 require "required_references"
+
+include CIMaestro::SourceControl
 module Build
   class GetSvnSourcesTask < Task
     include Build::ShellUtils

@@ -1,6 +1,7 @@
 require "spec"
 require "uuid"
-require "cimaestro"
+require "lib/required_references"
+require "lib/cimaestro"
 require "system_file_structure_mocker"
 
 TESTS_SOURCE_FILES = "./spec/TestSourceFiles"
@@ -27,8 +28,7 @@ class String
 end
 
 def create_task(klass, system_name="aSystem", codeline="Release", version="1.5.8.7")
-  build_spec = BuildSpec.new(system_name, codeline, version)
-  build_spec.base_path = TESTS_BASE_PATH
+  build_spec = BuildSpec.new(TESTS_BASE_PATH, system_name, codeline, version)
   task = klass.new klass.to_s.underscore.to_sym, build_spec, NullLogger.new
   return task, build_spec
 end

@@ -215,10 +215,14 @@ end
 
 desc "Prepares build, by creating a Build Specification and the Logger.\n"
 task :setup_build_spec do
-  build_spec = BuildSpec.new(ENV["SYSTEM"], ENV["CODELINE"], ENV["VERSION"])
-  build_spec.base_path = ENV["BASE_PATH"] if ENV["BASE_PATH"] != nil
-  runtime_spec = BuildSpec.new("STQRuntime", ENV["CODELINE"])
-  runtime_spec.base_path = ENV["BASE_PATH"] if ENV["BASE_PATH"] != nil
+
+  cimaestro_configuration_path = File.join(ENV["BASE_PATH"], ".cimaestro", "cimaestro.rb")
+  import cimaestro_configuration_path if File.exists?(cimaestro_configuration_path)
+
+  build_spec_options = {}
+  build_spec_options[:directory_structure] = ENV["DIRECTORY_STRUCTURE"].to_class unless ENV["DIRECTORY_STRUCTURE"].empty?
+  build_spec = BuildSpec.new(ENV["BASE_PATH"], ENV["SYSTEM"], ENV["CODELINE"], ENV["VERSION"], build_spec_options)
+  runtime_spec = BuildSpec.new(ENV["BASE_PATH"], "STQRuntime", ENV["CODELINE"])
 
   if ENV["LOG_TO_FILE"] == "true" then
     logger = NAntCompatibleXmlLogger.new build_spec.system_name, File.join(build_spec.logs_dir_path, "build-results.xml")

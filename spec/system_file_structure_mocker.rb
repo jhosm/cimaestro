@@ -7,8 +7,14 @@ class SystemFileStructureMocker
     @@prj_index = 0
   end
 
-  def add_build_dir()
-    mkpath @build_spec.logs_dir_path 
+  def add_build_scripts_dir()
+    mkpath @build_spec.build_scripts_dir_path
+    self
+  end
+
+  def add_logs_dir()
+    mkpath @build_spec.logs_dir_path
+    self
   end
 
   def add_project(project_name)

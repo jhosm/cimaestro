@@ -2,8 +2,7 @@ require "spec_helper"
 
 describe MergeXslFilesTask do
   before(:each) do
-    @build_spec = BuildSpec.new("Dummy_cimaestro", "Release", "4.5.8.7")
-    @build_spec.base_path = TESTS_BASE_PATH
+    @build_spec = BuildSpec.new(TESTS_BASE_PATH, "Dummy_cimaestro", "Release", "4.5.8.7")
     @merge_xsl = MergeXslFilesTask.new :merge_xsl_files, @build_spec, NullLogger.new
   end
 
@@ -72,8 +71,7 @@ end
 
 describe ValidateAndMinimizeXmlFilesTask do
   before(:each) do
-    @build_spec = BuildSpec.new("Dummy_cimaestro", "Release", "4.5.8.7")
-    @build_spec.base_path = TESTS_BASE_PATH
+    @build_spec = BuildSpec.new(TESTS_BASE_PATH, "Dummy_cimaestro", "Release", "4.5.8.7")
     @validate_xml = ValidateAndMinimizeXmlFilesTask.new :validate_xml, @build_spec, NullLogger.new
   end
 

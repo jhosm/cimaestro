@@ -2,8 +2,7 @@ require "spec_helper"
 
 describe PurgeTask do
   before(:each) do
-    @build_spec = BuildSpec.new("Dummy_cimaestro", "Release", "4.5.8.7")
-    @build_spec.base_path = TESTS_BASE_PATH
+    @build_spec = BuildSpec.new(TESTS_BASE_PATH, "Dummy_cimaestro", "Release", "4.5.8.7")
     @purge = PurgeTask.new :purge, @build_spec, NullLogger.new
   end
 

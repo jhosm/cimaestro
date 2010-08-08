@@ -2,8 +2,7 @@ require "spec_helper"
 
 describe NAntCompatibleXmlLogger do
   before(:each) do
-    @build_spec = BuildSpec.new("Dummy_cimaestro", "Release", "4.5.8.7")
-    @build_spec.base_path = '../../../..'
+    @build_spec = BuildSpec.new('../../../..', "Dummy_cimaestro", "Release", "4.5.8.7")
     @log = NAntCompatibleXmlLogger.new "Mr Build", File.join(@build_spec.logs_dir_path, "build-results.xml")
   end
 

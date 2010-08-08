@@ -7,7 +7,9 @@ describe AnalyzeCodeTask do
     @task.src_control = mock("src_control", :null_object => true)
     @task.stub!(:sh)
     @task.setup
-    SystemFileStructureMocker.create_with_projects(@build_spec, []).add_build_dir
+    SystemFileStructureMocker.create_with_projects(@build_spec, []).
+            add_build_scripts_dir.
+            add_logs_dir
     cp File.join(TESTS_SOURCE_FILES, "24-issues-report-fxcop.xml"), @task.benchmark_report_path, :verbose=>true
   end
 

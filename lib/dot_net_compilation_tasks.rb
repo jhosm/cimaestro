@@ -106,7 +106,7 @@ END_OF_STRING
         File.open(policy_file_path_without_extension + ".config", "w") do |file|
           file.puts policy_file
         end
-        exec_and_log "#{Build::DOT_NET_2_0_SDK_PATH}/al /link:#{policy_file_path_without_extension}.config /out:#{policy_file_path_without_extension}.dll /keyfile:#{File.join(build_spec.tools_dir_path, Build::TOOLS_BUILD_DIR, "bancobpi.dnc.snk")}"
+        exec_and_log "#{Build::DOT_NET_2_0_SDK_PATH}/al /link:#{policy_file_path_without_extension}.config /out:#{policy_file_path_without_extension}.dll /keyfile:#{File.join(build_spec.tools_dir_path, Build::TOOLS_BUILD_DIR, "cimaestro..snk")}"
       end
     end
   end

@@ -2,8 +2,7 @@ require "spec_helper"
 
 describe MinifyJavascriptTask do
   before(:each) do
-    @build_spec = BuildSpec.new("Dummy_cimaestro", "Release", "4.5.8.7")
-    @build_spec.base_path = TESTS_BASE_PATH
+    @build_spec = BuildSpec.new(TESTS_BASE_PATH, "Dummy_cimaestro", "Release", "4.5.8.7")
     @minify = MinifyJavascriptTask.new :minify_javascript, @build_spec, NullLogger.new
     rm_r TESTS_BASE_PATH
   end
@@ -38,8 +37,7 @@ end
 
 describe MakeVersionedFileNamesTask do
   before(:each) do
-    @build_spec = BuildSpec.new("Dummy_cimaestro", "Release", "4.5.8.7")
-    @build_spec.base_path = TESTS_BASE_PATH
+    @build_spec = BuildSpec.new(TESTS_BASE_PATH, "Dummy_cimaestro", "Release", "4.5.8.7")
     @replace_xsl = MakeVersionedFileNamesTask.new :make_versioned_xsl_file_names, @build_spec, NullLogger.new
 
     @project_name = ProjectType::SITE + "-Sample"
@@ -65,8 +63,7 @@ end
 
 describe ReplaceCssReferencesTask do
   before(:each) do
-    @build_spec = BuildSpec.new("DummySeveralProjectTypes_cimaestro", "Release", "1.5.8.7")
-    @build_spec.base_path = TESTS_BASE_PATH
+    @build_spec = BuildSpec.new(TESTS_BASE_PATH, "DummySeveralProjectTypes_cimaestro", "Release", "1.5.8.7")
     @replace_css = ReplaceCssReferencesTask.new :make_versioned_css_file_names, @build_spec, NullLogger.new
 
     project_name = ProjectType::SITE + "-A_Site"

@@ -2,8 +2,7 @@ require "spec_helper"
 
 describe AbstractPublishTask do
   before(:each) do
-    @build_spec = BuildSpec.new("ExampleSystem", "Release", "4.5.8.7")
-    @build_spec.base_path = TESTS_BASE_PATH
+    @build_spec = BuildSpec.new(TESTS_BASE_PATH, "ExampleSystem", "Release", "4.5.8.7")
     @publish = AbstractPublishTask.new :publish, @build_spec, NullLogger.new
   end
 
@@ -15,8 +14,7 @@ end
 
 describe PublishTask do
   before(:each) do
-    @build_spec = BuildSpec.new("ExampleSystem", "Release", "4.5.8.7")
-    @build_spec.base_path = TESTS_BASE_PATH
+    @build_spec = BuildSpec.new(TESTS_BASE_PATH, "ExampleSystem", "Release", "4.5.8.7")
     @publish = PublishTask.new :publish, @build_spec, NullLogger.new
   end
 
@@ -56,8 +54,7 @@ end
 
 describe VersionSitesTask do
   before(:each) do
-    @build_spec = BuildSpec.new("DummySeveralProjectTypes_cimaestro", "Release", "4.5.8.7")
-    @build_spec.base_path = '../../../..'
+    @build_spec = BuildSpec.new('../../../..', "DummySeveralProjectTypes_cimaestro", "Release", "4.5.8.7")
     @version = VersionSitesTask.new :publish, @build_spec, NullLogger.new
   end
 
