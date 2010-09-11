@@ -1,7 +1,7 @@
 require "spec_helper"
 
 module CIMaestro
-  module BuildConfiguration
+  module Configuration
 
     describe BuildSpec do
       before(:each) do
@@ -16,7 +16,7 @@ module CIMaestro
       end
 
       it "should build working_dir_path from base_path, system_name and codeline" do
-        @build_spec.working_dir_path.should == "../../../../Dummy_cimaestro/Release/" + Build::WORKING_DIR
+        @build_spec.working_dir_path.should == "../../../../Dummy_cimaestro/Release/Integration"
       end
 
       it "should find all directories of a specified project type" do
@@ -48,8 +48,8 @@ module CIMaestro
       end
 
       it "should extract the project path from a project's file path" do
-        file_path = "../../../../Dummy_cimaestro/Release/" + Build::WORKING_DIR + "/Site-Xpto/teste/teste.xml"
-        @build_spec.extract_project_path(file_path).should == "../../../../Dummy_cimaestro/Release/" + Build::WORKING_DIR + "/Site-Xpto"
+        file_path = "../../../../Dummy_cimaestro/Release/Integration/Site-Xpto/teste/teste.xml"
+        @build_spec.extract_project_path(file_path).should == "../../../../Dummy_cimaestro/Release/Integration/Site-Xpto"
       end
 
       it "should find all the files from specified type in specified projects" do
@@ -67,6 +67,40 @@ module CIMaestro
         file_list.grep(/script1/).length.should == 1
         file_list.grep(/script2/).length.should == 1
       end
+
+      it "is true that the local path for a source control is always the working dir" do
+        svn_build_spec = BuildSpec.new( '../../../..', "Dummy_cimaestro", "Release", "4.5.8.7", :source_control => SourceControl::Svn, :source_control_repository_path=> "http://local")
+        svn_build_spec.src_control.local_path.should == @build_spec.working_dir_path
+
+        fs_build_spec = BuildSpec.new( '../../../..', "Dummy_cimaestro", "Release", "4.5.8.7")
+        fs_build_spec.src_control.local_path.should == @build_spec.working_dir_path
+      end
+
+      it "should build the default source control object when none is given" do
+        build_spec = BuildSpec.new( '../../../..', "Dummy_cimaestro", "Release", "4.5.8.7")
+        build_spec.src_control.should be_a(SourceControl::FileSystem)
+      end
+
+      it "should use the default repository path when none is given" do
+        build_spec = BuildSpec.new( '../../../..', "Dummy_cimaestro", "Release", "4.5.8.7")
+        build_spec.src_control.repository_path.should == @build_spec.solution_dir_path
+      end
+
+      it "should require a repository path if given a non-default source control type" do
+        lambda {BuildSpec.new( '../../../..', "Dummy_cimaestro", "Release", "4.5.8.7", {
+                :source_control => SourceControl::Svn
+                })}.should raise_exception(Exceptions::InvalidBuildSpecException, "You've specified a non-default :source_control. Please specify your :source_control_repository_path.")
+      end
+
+      it "should build the source control object based on the given class" do
+        build_spec = BuildSpec.new( '../../../..', "Dummy_cimaestro", "Release", "4.5.8.7", {
+                :source_control_repository_path => "http://localhost",
+                :source_control => SourceControl::Svn
+                })
+        build_spec.src_control.should be_a(SourceControl::Svn)
+        build_spec.src_control.repository_path.should == "http://localhost"
+      end
+
     end
 
     describe BuildVersion do

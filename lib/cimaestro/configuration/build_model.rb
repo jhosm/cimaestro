@@ -14,13 +14,6 @@ module ProjectType
 end
 
 module Build
-  WORKING_DIR = "Integration"
-  SOLUTION_DIR = "Solution"
-  BUILD_SCRIPTS_DIR = "Build"
-  ARTIFACTS_DIR = "Artifacts"
-  LATEST_ARTIFACTS_DIR = "Latest"
-  LIB_DIR = "lib"
-  LOGS_DIR = "Logs"
   DEFAULT_SOLUTION_BUILD_CONFIGURATION = "Release"
   SVN_REPOSITORY = "http://sc1diisapp3:8448/svn/rep"
   SVN_TOOLS_REPOSITORY = "http://sc1diisapp3:8448/svn/tools"
@@ -34,19 +27,21 @@ end
 
 module Build::ShellUtils
   def exec_and_log(command, result_codes_to_ignore = [])
-    system = build_spec.system_name
+    command_log_file = "#{UUID.new.to_s}_sh_log.txt"
+
     begin
       logger.log_msg(command)
-      sh(command + " > #{system}_#{@build_spec.codeline}_sh_log.txt") do |ok, res|
+      sh(command + " > #{command_log_file}") do |ok, res|
         if !ok && !result_codes_to_ignore.include?(res.exitstatus)
           raise command + " failed with result code (" + res.exitstatus.to_s + ")"
         end
       end
     ensure
-      if File.exist?("#{system}_#{@build_spec.codeline}_sh_log.txt")
-        File.open("#{system}_#{@build_spec.codeline}_sh_log.txt") do |sh_log|
+      if File.exist?(command_log_file)
+        File.open(command_log_file) do |sh_log|
           logger.log_msg(sh_log.read)
         end
+        File.delete(command_log_file)
       end
     end
   end
@@ -85,9 +80,7 @@ module CIMaestro
 
       extend Forwardable
       def_delegators :@directory_structure, :system_base_path, :working_dir_path, :solution_dir_path, :latest_artifacts_dir_path,
-                     :artifacts_dir_path, :lib_dir_path, :logs_dir_path,  :cimaestro_dir_path
-      #def_delegator :@directory_structure, :project_dir_path, :system_base_path
-      #def_delegator :@directory_structure, :build_scripts_dir_path, :cimaestro_dir_path
+                     :artifacts_dir_path, :lib_dir_path, :logs_dir_path,  :cimaestro_dir_path, :solution_dir, :cimaestro_dir
 
       alias :project_dir_path :system_base_path
       alias :build_scripts_dir_path :cimaestro_dir_path 
@@ -107,8 +100,28 @@ module CIMaestro
         @version = version
         @custom_specs = {}
 
-        options.reverse_merge!({:directory_structure=>DefaultDirectoryStructure})
-        @directory_structure = options[:directory_structure].new(base_path, system_name, codeline)
+        @build_options = options
+
+        @build_options.reverse_merge!({
+          :directory_structure=>DefaultDirectoryStructure
+        })
+
+        @directory_structure = @build_options[:directory_structure].new(base_path, system_name, codeline)
+
+        @build_options.reverse_merge!({
+          :source_control=>SourceControl::FileSystem
+        })
+        if not @build_options.include?(:source_control_repository_path) and
+           (not @build_options.include?(:source_control) or not @build_options[:source_control] == SourceControl::FileSystem) then
+          raise Exceptions::InvalidBuildSpecException, "You've specified a non-default :source_control. Please specify your :source_control_repository_path."
+        end
+
+        @build_options.reverse_merge!({
+          :source_control_repository_path=>solution_dir_path,
+          :source_control_username=>"",
+          :source_control_password=>""
+        })
+
       end
 
       def custom_specs_for(task_name)
@@ -180,8 +193,11 @@ module CIMaestro
         File.join(@base_path, "..", "_Tools")
       end
 
-      def source_control_repository_path
-        "#{Build::SVN_REPOSITORY}/#{@system_name}/#{@codeline}"
+      def src_control
+        @build_options[:source_control].new(working_dir_path,
+                                            @build_options[:source_control_repository_path],
+                                            @build_options[:source_control_username],
+                                            @build_options[:source_control_password])
       end
     end
 
@@ -267,12 +283,11 @@ module CIMaestro
 
       attr_reader :validation_error_message
 
-      def initialize(benchmark_report_path, report_path, build_version, src_control)
+      def initialize(benchmark_report_path, report_path, build_version)
         @benchmark_report_path = benchmark_report_path
         @report_path = report_path
         @build_version = build_version
         @build_version.should_ignore = :ignore_revision
-        @src_control = src_control
         @benchmark_exists = false
         @benchmark_version = BuildVersion.new("0.0.0.0", :ignore_revision)
       end
@@ -318,10 +333,6 @@ module CIMaestro
           File.open(@benchmark_report_path, "w") do |file|
             report.write file
           end
-
-          @src_control.add(File.basename(@benchmark_report_path)) if !@benchmark_exists
-
-          @src_control.commit
         end
 
       end

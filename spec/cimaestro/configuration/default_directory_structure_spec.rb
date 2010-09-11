@@ -1,7 +1,7 @@
 require "spec_helper"
 
 module CIMaestro
-  module BuildConfiguration
+  module Configuration
     describe DefaultDirectoryStructure do
       before(:each) do
         @out = DefaultDirectoryStructure.new TESTS_BASE_PATH, "SYSTEM_NAME", "MAINLINE"
