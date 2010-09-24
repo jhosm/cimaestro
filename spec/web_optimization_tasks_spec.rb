@@ -15,9 +15,9 @@ describe MinifyJavascriptTask do
             add_file_to_project_in_working_dir(File.join(@project_name, "GeneratedJS"), "jscript2.js")
 
     @minify.setup
-    @minify.should_receive(:sh).with(/java -jar .+compiler.jar --create_source_map=\"jscript1.js.map\" --js=".+jscript1.js" --js_output_file=".+jscript1.jsx" >.*/)
+    @minify.should_receive(:sh).with(/java -jar .+compiler.jar --create_source_map=\"jscript1.js.map\" --js=".+jscript1.js" --js_output_file=".+jscript1.jsx"/)
     FileUtils.should_receive(:mv).with(/jscript1.jsx/,/jscript1.js/)
-    @minify.should_receive(:sh).with(/java -jar .+compiler.jar --create_source_map=\"jscript2.js.map\" --js=".+jscript2.js" --js_output_file=".+jscript2.jsx" >.*/)
+    @minify.should_receive(:sh).with(/java -jar .+compiler.jar --create_source_map=\"jscript2.js.map\" --js=".+jscript2.js" --js_output_file=".+jscript2.jsx"/)
     FileUtils.should_receive(:mv).with(/jscript2.jsx/,/jscript2.js/)
     @minify.execute
   end

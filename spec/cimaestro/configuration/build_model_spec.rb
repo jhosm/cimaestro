@@ -5,14 +5,9 @@ module CIMaestro
 
     describe BuildSpec do
       before(:each) do
-        @build_spec = BuildSpec.new( '../../../..', "Dummy_cimaestro", "Release", "4.5.8.7")
-      end
-
-      it "should throw when one of the required values is not specified upon initialize" do
-        lambda { BuildSpec.new("", "Dummy_cimaestro", "Release", "1.5.6.7") }.should raise_error(ArgumentError)
-        lambda { BuildSpec.new(".", "", "Release", "1.5.6.7") }.should raise_error(ArgumentError)
-        lambda { BuildSpec.new(".", "Dummy_cimaestro", nil, "1.5.6.7") }.should raise_error(ArgumentError)
-        lambda { BuildSpec.new(".", "Dummy_cimaestro", "Release", "") }.should raise_error(ArgumentError)
+        conf = BuildConfig.load
+        conf.source_control.repository_path = conf.directory_structure.new("", "Dummy_cimaestro", "Release").solution_dir_path
+        @build_spec = BuildSpec.new( '../../../..', "Dummy_cimaestro", "Release", "4.5.8.7", conf)
       end
 
       it "should build working_dir_path from base_path, system_name and codeline" do
@@ -69,36 +64,18 @@ module CIMaestro
       end
 
       it "is true that the local path for a source control is always the working dir" do
-        svn_build_spec = BuildSpec.new( '../../../..', "Dummy_cimaestro", "Release", "4.5.8.7", :source_control => SourceControl::Svn, :source_control_repository_path=> "http://local")
+        conf = BuildConfig.load
+        conf.source_control.repository_path = conf.directory_structure.new("", "Dummy_cimaestro", "Release").solution_dir_path
+
+
+        fs_build_spec = BuildSpec.new( '../../../..', "Dummy_cimaestro", "Release", "4.5.8.7", conf)
+        fs_build_spec.src_control.local_path.should == @build_spec.working_dir_path
+
+        conf.source_control.type = SourceControl::Svn
+        conf.source_control.repository_path = "http://local"
+        svn_build_spec = BuildSpec.new( '../../../..', "Dummy_cimaestro", "Release", "4.5.8.7", conf)
         svn_build_spec.src_control.local_path.should == @build_spec.working_dir_path
 
-        fs_build_spec = BuildSpec.new( '../../../..', "Dummy_cimaestro", "Release", "4.5.8.7")
-        fs_build_spec.src_control.local_path.should == @build_spec.working_dir_path
-      end
-
-      it "should build the default source control object when none is given" do
-        build_spec = BuildSpec.new( '../../../..', "Dummy_cimaestro", "Release", "4.5.8.7")
-        build_spec.src_control.should be_a(SourceControl::FileSystem)
-      end
-
-      it "should use the default repository path when none is given" do
-        build_spec = BuildSpec.new( '../../../..', "Dummy_cimaestro", "Release", "4.5.8.7")
-        build_spec.src_control.repository_path.should == @build_spec.solution_dir_path
-      end
-
-      it "should require a repository path if given a non-default source control type" do
-        lambda {BuildSpec.new( '../../../..', "Dummy_cimaestro", "Release", "4.5.8.7", {
-                :source_control => SourceControl::Svn
-                })}.should raise_exception(Exceptions::InvalidBuildSpecException, "You've specified a non-default :source_control. Please specify your :source_control_repository_path.")
-      end
-
-      it "should build the source control object based on the given class" do
-        build_spec = BuildSpec.new( '../../../..', "Dummy_cimaestro", "Release", "4.5.8.7", {
-                :source_control_repository_path => "http://localhost",
-                :source_control => SourceControl::Svn
-                })
-        build_spec.src_control.should be_a(SourceControl::Svn)
-        build_spec.src_control.repository_path.should == "http://localhost"
       end
 
     end

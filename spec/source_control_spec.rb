@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe CIMaestro::SourceControl::Svn do
   before(:each) do
-    @svn = SourceControlFactory.create("c:/local", "http://xpto")
+    @svn = CIMaestro::SourceControl::Svn.new("c:/local", "http://xpto")
     @svn.stub!(:sh)
   end
 

@@ -1,7 +1,10 @@
 module CIMaestro
   module Application
-    class InstallerCommand
-      include CommandLineParser, CommandLineOptions
+    class InstallCommand < CommandLineCommand
+
+      def desc
+        "Installs CIMaestro."
+      end
 
       def run(args)
         options = parse(args, INSTALLER_OPTIONS) 

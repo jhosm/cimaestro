@@ -66,16 +66,16 @@ module Build
       @xml_policy_files = {}
       @version = BuildVersion.new(build_spec.version)
 
-      aditional_projects = []
+      additional_projects = []
       if build_spec.custom_specs_for(rake_name.to_sym).has_key?(:include)
-        aditional_projects = build_spec.custom_specs_for(rake_name.to_sym)[:include]
+        additional_projects = build_spec.custom_specs_for(rake_name.to_sym)[:include]
       end
-      aditional_projects.map! do |project_name|
+      additional_projects.map! do |project_name|
         Project.new(File.join(build_spec.working_dir_path, project_name))
       end
 
       @assemblies_projects = build_spec.get_projects_of(ProjectType::GAC_ASSEMBLY)
-      @assemblies_projects.push(aditional_projects).flatten!.each do |project|
+      @assemblies_projects.push(additional_projects).flatten!.each do |project|
         xml_policy_file = <<END_OF_STRING
 <configuration>
    <runtime>
@@ -106,7 +106,7 @@ END_OF_STRING
         File.open(policy_file_path_without_extension + ".config", "w") do |file|
           file.puts policy_file
         end
-        exec_and_log "#{Build::DOT_NET_2_0_SDK_PATH}/al /link:#{policy_file_path_without_extension}.config /out:#{policy_file_path_without_extension}.dll /keyfile:#{File.join(build_spec.tools_dir_path, Build::TOOLS_BUILD_DIR, "cimaestro..snk")}"
+        exec_and_log "#{Build::DOT_NET_2_0_SDK_PATH}/al /link:#{policy_file_path_without_extension}.config /out:#{policy_file_path_without_extension}.dll /keyfile:#{File.join(build_spec.tools_dir_path, Build::TOOLS_BUILD_DIR, "cimaestro.snk")}"
       end
     end
   end

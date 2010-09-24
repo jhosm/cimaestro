@@ -2,38 +2,42 @@ require "spec_helper"
 
 module CIMaestro
   module Application
-    describe BuilderCommand do
+
+    class TestDirectoryStructure < DefaultDirectoryStructure;end
+
+    describe BuildCommand do
 
       DEFAULT_OPTIONS =  ['-S', 'CIMaestro', '-c', 'Mainline', '-n','1.0.0.0']
 
       it "should require the system name, codeline name and version" do
-        Kernel.should_receive(:system).with("rake SYSTEM=CIMaestro CODELINE=Mainline VERSION=1.0.0.0 TRIGGER=forced default")
-        BuilderCommand.new.run(['-S', 'CIMaestro', '-c', 'Mainline', '-n','1.0.0.0'])
+        lambda {BuildCommand.new.parse_args(['-S', 'CIMaestro', '-c', 'Mainline', '-n','1.0.0.0'])}.should_not raise_exception()
       end
 
       it "should execute the given rake task" do
-        Kernel.should_receive(:system).with(/.+\spurge/)
-        BuilderCommand.new.run(DEFAULT_OPTIONS + ['-T', 'purge'])
+        mocked_task = mock("task").as_null_object
+
+        Rake.application.should_receive(:[]).with("purge").and_return(mocked_task)
+        BuildCommand.new.run(DEFAULT_OPTIONS + ['-T', 'purge'])
       end
 
       it "should set the specified trigger" do
-        Kernel.should_receive(:system).with(/.+\sTRIGGER=interval\s/)
-        BuilderCommand.new.run(DEFAULT_OPTIONS + ['-t', 'interval'])
+        BuildCommand.new.prepare_build(DEFAULT_OPTIONS + ['-t', 'interval'])
+        $build_config.trigger_type.should == 'interval'
       end
 
       it "should enable trace" do
-        Kernel.should_receive(:system).with(/.+\s--trace/)
-        BuilderCommand.new.run(DEFAULT_OPTIONS + ['--trace'])
+        BuildCommand.new.prepare_build(DEFAULT_OPTIONS + ['--trace'])
+        Rake.application.options.trace.should be_true
       end
 
       it "should set the base path" do
-        Kernel.should_receive(:system).with(/.+\sBASE_PATH=c:\//)
-        BuilderCommand.new.run(DEFAULT_OPTIONS + ['-p', 'c:/'])
+        BuildCommand.new.prepare_build(DEFAULT_OPTIONS + ['-p', 'c:/'])
+        $build_config.base_path.should == 'c:/'
       end
 
       it "should set the directory structure" do
-        Kernel.should_receive(:system).with(/.+\sDIRECTORY_STRUCTURE=Directory/)
-        BuilderCommand.new.run(DEFAULT_OPTIONS + ['-d', 'Directory'])
+        BuildCommand.new.prepare_build(DEFAULT_OPTIONS + ['-d', 'CIMaestro::Application::TestDirectoryStructure'])
+        $build_config.directory_structure.should == TestDirectoryStructure
       end
     end
   end

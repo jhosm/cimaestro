@@ -3,6 +3,12 @@
   <component name="GemRequirementsHolder" version="2">
     <requirement>
       <requirement>
+        <dependency name="activesupport" version="2.3.8" bound="GREATER_OR_EQUAL" git="false" />
+      </requirement>
+      <source from="Gemfile" />
+    </requirement>
+    <requirement>
+      <requirement>
         <dependency name="bundler" version="0.9.26" bound="GREATER_OR_EQUAL" git="false" />
       </requirement>
       <source from="pkg/cimaestro-1.0.0/Gemfile" />
@@ -20,12 +26,6 @@
       </requirement>
       <source from="Gemfile" />
       <source from="pkg/cimaestro-1.0.0/Gemfile" />
-    </requirement>
-    <requirement>
-      <requirement>
-        <dependency name="json_pure" version="0" bound="GREATER_OR_EQUAL" git="false" />
-      </requirement>
-      <source manual="true" />
     </requirement>
     <requirement>
       <requirement>
@@ -101,7 +101,8 @@
     <orderEntry type="library" scope="PROVIDED" name="[gem] linecache (v0.43, C:/Ruby187/lib/ruby/gems/1.8/gems/linecache-0.43)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] macaddr (v1.0.0, C:/Ruby187/lib/ruby/gems/1.8/gems/macaddr-1.0.0)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] uuid (v2.3.1, C:/Ruby187/lib/ruby/gems/1.8/gems/uuid-2.3.1)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] json_pure (v1.4.3, C:/Ruby187/lib/ruby/gems/1.8/gems/json_pure-1.4.3)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] activesupport (v2.3.8, C:/Ruby187/lib/ruby/gems/1.8/gems/activesupport-2.3.8)" level="application" />
   </component>
+  <component name="RModuleSettingsStorage" number="2" string0="$MODULE_DIR$/spec" string1="$MODULE_DIR$/lib" />
 </module>
 

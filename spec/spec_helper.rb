@@ -1,3 +1,5 @@
+$stderr =  StringIO.new
+
 require "spec"
 require "uuid"
 require "lib/required_references"
@@ -7,6 +9,7 @@ require "system_file_structure_mocker"
 TESTS_SOURCE_FILES = "./spec/TestSourceFiles"
 TESTS_BASE_PATH = "./spec/Tests"
 rm_rf TESTS_BASE_PATH
+
 
 
 class String

@@ -1,5 +1,5 @@
 module CIMaestro
-  module BuildConfiguration
+  module Configuration
     class DefaultDirectoryStructure
 
       def working_dir

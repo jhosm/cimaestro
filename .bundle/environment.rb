@@ -174,11 +174,12 @@ end
 module Bundler
   ENV_LOADED   = true
   LOCKED_BY    = '0.9.26'
-  FINGERPRINT  = "e7bbbfc8e5f6747b04c66ab7e4447628ce77ad8a"
+  FINGERPRINT  = "c6d5073fa9bc8e3d0bb5f9e15057d0d89bdee8f1"
   HOME         = 'C:/Ruby187/lib/ruby/gems/1.8/bundler'
-  AUTOREQUIRES = {:development=>[["hoe", false], ["linecache", false], ["rcov", false], ["ruby-debug-base", false], ["ruby-debug-ide", false]], :test=>[["diff-lcs", false], ["spec", true]], :default=>[["rake", false], ["uuid", false]]}
+  AUTOREQUIRES = {:development=>[["hoe", false], ["linecache", false], ["rcov", false], ["ruby-debug-base", false], ["ruby-debug-ide", false]], :test=>[["diff-lcs", false], ["spec", true]], :default=>[["rake", false], ["activesupport", false], ["uuid", false]]}
   SPECS        = [
         {:loaded_from=>"C:/Ruby187/lib/ruby/gems/1.8/specifications/rake-0.8.7.gemspec", :load_paths=>["C:/Ruby187/lib/ruby/gems/1.8/gems/rake-0.8.7/lib"], :name=>"rake"},
+        {:loaded_from=>"C:/Ruby187/lib/ruby/gems/1.8/specifications/activesupport-2.3.8.gemspec", :load_paths=>["C:/Ruby187/lib/ruby/gems/1.8/gems/activesupport-2.3.8/lib"], :name=>"activesupport"},
         {:loaded_from=>"C:/Ruby187/lib/ruby/gems/1.8/specifications/diff-lcs-1.1.2.gemspec", :load_paths=>["C:/Ruby187/lib/ruby/gems/1.8/gems/diff-lcs-1.1.2/lib"], :name=>"diff-lcs"},
         {:loaded_from=>"C:/Ruby187/lib/ruby/gems/1.8/specifications/json_pure-1.4.3.gemspec", :load_paths=>["C:/Ruby187/lib/ruby/gems/1.8/gems/json_pure-1.4.3/lib"], :name=>"json_pure"},
         {:loaded_from=>"C:/Ruby187/lib/ruby/gems/1.8/specifications/rubyforge-2.0.4.gemspec", :load_paths=>["C:/Ruby187/lib/ruby/gems/1.8/gems/rubyforge-2.0.4/lib"], :name=>"rubyforge"},

@@ -11,51 +11,58 @@ module Build
     end
 
     def setup
-      @source_monitor_command = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
-      @source_monitor_command += "<sourcemonitor_commands>"
-      @source_monitor_command += "	<command>"
-      @source_monitor_command += "		<project_file>#{File.join(build_spec.working_dir_path, "sm_project.smp")}</project_file>"
-      @source_monitor_command += "		<project_language>CSharp</project_language>"
-      @source_monitor_command += "		<source_directory>#{build_spec.working_dir_path}</source_directory>"
-      @source_monitor_command += "		<include_subdirectories>true</include_subdirectories>"
-      @source_monitor_command += "		<checkpoint_name>#{build_spec.version}</checkpoint_name>"
-      @source_monitor_command += "		<export>"
-      @source_monitor_command += "			<export_file>#{File.join(build_spec.logs_dir_path, "sm_summary-results.xml")}</export_file>"
-      @source_monitor_command += "			<export_type>1</export_type>"
-      @source_monitor_command += "		</export>"
-      @source_monitor_command += "	</command>"
-      @source_monitor_command += "	<command>"
-      @source_monitor_command += "		<project_file>#{File.join(build_spec.working_dir_path, "sm_project.smp")}</project_file>"
-      @source_monitor_command += "		<checkpoint_name>#{build_spec.version}</checkpoint_name>"
-      @source_monitor_command += "		<export>"
-      @source_monitor_command += "			<export_file>#{File.join(build_spec.logs_dir_path, "sm_details-results.xml")}</export_file>"
-      @source_monitor_command += "			<export_type>2</export_type>"
-      @source_monitor_command += "		</export>"
-      @source_monitor_command += "	</command>"
-      @source_monitor_command += "</sourcemonitor_commands>"
+      @sm_path = File.join(build_spec.tools_dir_path, "SourceMonitor")
+      if File.exists?(@sm_path) then
 
-      File.open(File.join(build_spec.working_dir_path, "sourcemonitor.xml"), "w") do |f|
-        f.puts @source_monitor_command
+        @source_monitor_command = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
+        @source_monitor_command += "<sourcemonitor_commands>"
+        @source_monitor_command += "	<command>"
+        @source_monitor_command += "		<project_file>#{File.join(build_spec.working_dir_path, "sm_project.smp")}</project_file>"
+        @source_monitor_command += "		<project_language>CSharp</project_language>"
+        @source_monitor_command += "		<source_directory>#{build_spec.working_dir_path}</source_directory>"
+        @source_monitor_command += "		<include_subdirectories>true</include_subdirectories>"
+        @source_monitor_command += "		<checkpoint_name>#{build_spec.version}</checkpoint_name>"
+        @source_monitor_command += "		<export>"
+        @source_monitor_command += "			<export_file>#{File.join(build_spec.logs_dir_path, "sm_summary-results.xml")}</export_file>"
+        @source_monitor_command += "			<export_type>1</export_type>"
+        @source_monitor_command += "		</export>"
+        @source_monitor_command += "	</command>"
+        @source_monitor_command += "	<command>"
+        @source_monitor_command += "		<project_file>#{File.join(build_spec.working_dir_path, "sm_project.smp")}</project_file>"
+        @source_monitor_command += "		<checkpoint_name>#{build_spec.version}</checkpoint_name>"
+        @source_monitor_command += "		<export>"
+        @source_monitor_command += "			<export_file>#{File.join(build_spec.logs_dir_path, "sm_details-results.xml")}</export_file>"
+        @source_monitor_command += "			<export_type>2</export_type>"
+        @source_monitor_command += "		</export>"
+        @source_monitor_command += "	</command>"
+        @source_monitor_command += "</sourcemonitor_commands>"
+
+        File.open(File.join(build_spec.working_dir_path, "sourcemonitor.xml"), "w") do |f|
+          f.puts @source_monitor_command
+        end
+
+        @command_line = "\"" + File.join(build_spec.tools_dir_path, "SourceMonitor", "SourceMonitor") + "\" "
+        @command_line += "/C \"" + File.join(build_spec.working_dir_path, "sourcemonitor.xml\" ")
       end
-
-      @command_line = "\"" + File.join(build_spec.tools_dir_path, "SourceMonitor", "SourceMonitor") + "\" "
-      @command_line += "/C \"" + File.join(build_spec.working_dir_path, "sourcemonitor.xml\" ")
-
     end
 
     def execute
-      FileUtils.mkpath(build_spec.logs_dir_path) unless File.exist?(build_spec.logs_dir_path)
+      if File.exists?(@sm_path) then
+        FileUtils.mkpath(build_spec.logs_dir_path) unless File.exist?(build_spec.logs_dir_path)
 
-      exec_and_log(@command_line)
+        exec_and_log(@command_line)
 
-      results_path = File.join(build_spec.logs_dir_path, "sm_details-results.xml")
+        results_path = File.join(build_spec.logs_dir_path, "sm_details-results.xml")
 
-      xslt = WIN32OLE.new("MSXML2.DOMDocument.3.0")
-      xslt.load(File.join(File.dirname(__FILE__), "SourceMonitorSummaryGeneration.xsl"))
-      xml_report = WIN32OLE.new("MSXML2.DOMDocument.3.0")
-      xml_report.load(results_path)
-      File.open(results_path, "w") do |f|
-        f.puts xml_report.transformNode(xslt)
+        xslt = WIN32OLE.new("MSXML2.DOMDocument.3.0")
+        xslt.load(File.join(File.dirname(__FILE__), "SourceMonitorSummaryGeneration.xsl"))
+        xml_report = WIN32OLE.new("MSXML2.DOMDocument.3.0")
+        xml_report.load(results_path)
+        File.open(results_path, "w") do |f|
+          f.puts xml_report.transformNode(xslt)
+        end
+      else
+        logger.log_msg("Source Monitor was not found at #{@sm_path}, so it won't be run.")
       end
     end
   end
@@ -63,14 +70,13 @@ module Build
   class AnalyzeCodeTask < Task
     include Build::ShellUtils
 
-    attr_accessor :command_line, :src_control
+    attr_accessor :command_line
     attr_reader :rules_path, :benchmark_report_path, :report_path
 
     def initialize(rake_name, build_spec, logger)
       super(rake_name, build_spec, logger)
       @command_line = ""
       @rules_path = File.join(build_spec.tools_dir_path, "FxCop", "Rules")
-      @src_control = SourceControlFactory.create(build_spec.build_scripts_dir_path, build_spec.source_control_repository_path+"/"+Build::BUILD_SCRIPTS_DIR)
       @benchmark_report_path = File.join(build_spec.build_scripts_dir_path, "benchmark-report-fxcop.xml")
       @report_path = File.join(build_spec.logs_dir_path, "report-fxcop.xml")
     end
@@ -115,14 +121,17 @@ module Build
     public
 
     def execute
-      FileUtils.mkpath(build_spec.logs_dir_path) unless File.exist?(build_spec.logs_dir_path)
+      if @projects_to_analyze.size > 0 then
+        FileUtils.mkpath(build_spec.logs_dir_path) unless File.exist?(build_spec.logs_dir_path)
+        exec_and_log(@command_line, [9])
 
-      exec_and_log(@command_line, [9]) if @projects_to_analyze.size > 0
-
-      benchmark = Benchmark.new(@benchmark_report_path, @report_path, BuildVersion.new(build_spec.version, :ignore_revision), @src_control)
-      benchmark.validate_and_update do |benchmark_report, report|
-        [benchmark_report.root.elements.to_a("//Issue").length, report.root.elements.to_a("//Issue").length]
-      end 
+        benchmark = CIMaestro::Configuration::Benchmark.new(@benchmark_report_path, @report_path, BuildVersion.new(build_spec.version, :ignore_revision))
+        benchmark.validate_and_update do |benchmark_report, report|
+          [benchmark_report.root.elements.to_a("//Issue").length, report.root.elements.to_a("//Issue").length]
+        end
+      else
+        logger.log_msg("No projects to analyze.")
+      end
     end
   end
 

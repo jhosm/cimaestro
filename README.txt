@@ -59,9 +59,8 @@ CIMaestro has the following major features:
 == INSTALL:
 
 * gem install cimaestro
-* cimaestro -s [gempath],
-    where gempath is the location where you want to put the gems upon CIMaestro depends. If you
-    don't give gempath, then it installs them on a private location.
+* cimaestro install -h,
+    and follow the instructions.
 
 == DEVELOPERS:
 
@@ -69,6 +68,12 @@ After checking out the source (git@github.com:jhosm/cimaestro.git), run:
 
   $ bundle install, on the home directory
   $ rake verify_rcov, and all the tests should pass
+
+To create a new cimaestro gem:
+  $ Make sure Manifest.txt contains all the file to be contained in the gem
+  $ At the CIMaestro project root directory:
+    $ Do a "bundler pack" (check bundler site for more info)
+    $ run "rake gem", and the gem file will be in the "pkg" directory.
 
 == LICENSE:
 

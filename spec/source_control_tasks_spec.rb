@@ -1,25 +1,32 @@
 require "spec_helper"
 
-describe GetSvnSourcesTask do
-  before(:each) do
-    @task, @build_spec = create_task(GetSvnSourcesTask)
+
+describe GetSourcesTask do
+
+  class NullSourceControl
+    @@checkedout = false
+
+    def checkout
+      @@checkedout = true
+    end
+    def checkedout
+      @@checkedout
+    end
+  end
+
+  class NullSourceControlBuildSpec < CIMaestro::Configuration::BuildSpec
+    def initialize; end
+    def src_control
+      NullSourceControl.new
+    end
   end
 
   it "should checkout" do
-    @task.src_control.should_receive(:checkout)
-    @task.execute
-  end
-end
 
-describe GetLocalSourcesTask do
-  before(:each) do
-    @get_sources, @build_spec = create_task(GetLocalSourcesTask)
-  end
+    build_spec =  NullSourceControlBuildSpec.new
+    task = GetSourcesTask.new :sym, build_spec, nil
+    task.execute
 
-  it "should get sources from local solution" do
-    SystemFileStructureMocker.create_solution_with_projects(@build_spec, [ProjectType::WINDOWS_SERVICE + "-Sample"])
-    FileUtils.rm_rf(@build_spec.working_dir_path)
-    @get_sources.execute
-    File.exist?(@build_spec.working_dir_path).should be_true
+    build_spec.src_control.checkedout.should be_true
   end
 end

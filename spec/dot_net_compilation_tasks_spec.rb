@@ -132,7 +132,7 @@ describe CreateStrongNamedAssemblyPolicyTask do
     file = mock("config_file", :null_object => true)
     File.stub!(:open)
     @task.should_receive(:sh).
-            with(/.+al \/link:.+policy.4.5.MyStrongNamedAssembly.config \/out:.+policy.4.5.MyStrongNamedAssembly.dll \/keyfile:.+cimaestro..snk/).
+            with(/.+al \/link:.+policy.4.5.MyStrongNamedAssembly.config \/out:.+policy.4.5.MyStrongNamedAssembly.dll \/keyfile:.+cimaestro\.snk/).
             once
 
     @task.execute

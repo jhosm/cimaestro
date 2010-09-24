@@ -1,11 +1,6 @@
-
-require '../lib/cimaestro/ruby_extensions/hash/reverse_merge'
-CONST = 1
-class MyClass
-
-end
-
-puts CONST.is_a?(Class)
-puts MyClass.is_a?(Class)
+$:.unshift "../lib"
+require "../lib/required_references"
+require "../lib/cimaestro"
+CIMaestro::Application::BuildCommand.new.parse_options(['-S', 'CIMaestro', '-c', 'Mainline', '-n','1.0.0.0'])
 
 

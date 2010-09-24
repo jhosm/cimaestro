@@ -4,6 +4,7 @@ source :gemcutter
 
 gem "rake", ">=0.8.7"
 gem "uuid", ">=2.3.1"
+gem "activesupport", ">=2.3.8"
 
 gem "rspec", ">=1.3.0", :group => [:test], :require => "spec"
 gem "diff-lcs", ">=1.1.2", :group => [:test]

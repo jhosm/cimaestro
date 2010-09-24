@@ -34,6 +34,10 @@ dependencies:
     group: 
     - :development
     version: ">= 2.6.1"
+  activesupport: 
+    group: 
+    - :default
+    version: ">= 2.3.8"
   ruby-debug-base: 
     group: 
     - :development
@@ -41,6 +45,8 @@ dependencies:
 specs: 
 - rake: 
     version: 0.8.7
+- activesupport: 
+    version: 2.3.8
 - diff-lcs: 
     version: 1.1.2
 - json_pure: 
@@ -63,7 +69,7 @@ specs:
     version: 0.4.9
 - uuid: 
     version: 2.3.1
-hash: e7bbbfc8e5f6747b04c66ab7e4447628ce77ad8a
+hash: c6d5073fa9bc8e3d0bb5f9e15057d0d89bdee8f1
 sources: 
 - Rubygems: 
     uri: http://gemcutter.org

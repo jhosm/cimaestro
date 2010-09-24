@@ -30,7 +30,7 @@ module Build
 
     def execute
       versionizer = FilenameVersionizer.new
-      versionizer.versionize_and_copy_files @files_to_version, build_spec.version
+      versionizer.versionize_and_copy_files @files_to_version, build_spec.version.to_s
     end
   end
 

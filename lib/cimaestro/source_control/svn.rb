@@ -1,13 +1,10 @@
-require 'FileUtils'
-
 module CIMaestro
   module SourceControl
     class Svn
-      include FileUtils
 
       attr_reader :repository_path, :local_path, :last_command
 
-      def initialize(local_path, repository_path = nil)
+      def initialize(local_path, repository_path, username = "", password = "")
         @repository_path = repository_path
         @local_path = local_path
       end

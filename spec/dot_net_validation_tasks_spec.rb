@@ -4,7 +4,6 @@ describe AnalyzeCodeTask do
   
   before(:each) do
     @task, @build_spec = create_task(AnalyzeCodeTask)
-    @task.src_control = mock("src_control", :null_object => true)
     @task.stub!(:sh)
     @task.setup
     SystemFileStructureMocker.create_with_projects(@build_spec, []).
@@ -17,8 +16,6 @@ describe AnalyzeCodeTask do
     cp File.join(TESTS_SOURCE_FILES, "0-issues-report-fxcop.xml"), @task.report_path, :verbose=>true
     File.should_receive(:exist?).any_number_of_times.and_return(false)
     FileUtils.should_receive(:cp).with(/report-fxcop.xml/,@task.benchmark_report_path)
-    @task.src_control.should_receive(:add).with(/benchmark-report-fxcop.xml/)
-    @task.src_control.should_receive(:commit)
     @task.execute
   end
 
@@ -43,7 +40,7 @@ describe AnalyzeCodeTask do
   end
 
   it "should fail if the number of issues has not decreased by more than twenty when a version increases" do
-    @build_spec.version = "1.5.9.0"
+    @build_spec.version_number = "1.5.9.0"
     cp File.join(TESTS_SOURCE_FILES, "4-issues-report-fxcop.xml"), @task.report_path, :verbose=>true
     lambda {@task.execute}.should raise_error
   end
@@ -54,20 +51,20 @@ describe AnalyzeCodeTask do
   end
 
   it "should not fail if the number of issues decreased by more than twenty when a version increases" do
-    @build_spec.version = "2.0.0.0"
+    @build_spec.version_number = "2.0.0.0"
     cp File.join(TESTS_SOURCE_FILES, "3-issues-report-fxcop.xml"), @task.report_path, :verbose=>true
     @task.execute
   end
 
   it "should update the benchmark report when the analysis passes and the version has increased" do
-    @build_spec.version = "1.6.0.0"
+    @build_spec.version_number = "1.6.0.0"
     @task.execute
     report = Document.new File.read(@task.benchmark_report_path)
     report.root.attributes["buildVersion"].should == "1.6.0.0"
   end
 
   it "should not update the benchmark report when the analysis passes and only the version revision has changed" do
-    @build_spec.version = "1.5.8.9"
+    @build_spec.version_number = "1.5.8.9"
     @task.execute
     report = Document.new File.read(@task.benchmark_report_path)
     report.root.attributes["buildVersion"].should == "1.5.8.7"

@@ -10,9 +10,9 @@ def execute_task(task_name)
     $registry[:logger].set_current_task(task_name)
 
     task_to_execute = $registry[task_name.to_sym].new(task_name, $registry[:build_spec], $registry[:logger])
-    task = ExecutionTimeTask.new($registry[:build_spec],
-            $registry[:logger],
-            task_to_execute)
+    task = ExecutionTimeTask.new(task_to_execute,
+                                 $registry[:build_spec],
+                                 $registry[:logger])
     task.setup
     task.execute
   rescue => ex
@@ -30,16 +30,11 @@ def set_dependencies(default_dependencies)
 end
 
 desc "The root task\n"
-task :default => [:deploy_to_development] do
-end
-
-desc "Deploys the artifacts to development.\n"
-task :deploy_to_development => :post_publish do |t|
-  execute_task t.name
+task :default => [:post_publish] do
 end
 
 "Default :post_publish, which does nothing. If a project needs customization, it should create a task with the same name in the file referenced in :load_customs_specs.\n"
-task :post_publish => :publish  do |t|
+task :post_publish => :publish do |t|
 end
 
 desc "Publishes all artifacts to the latest artifacts dir.\n"
@@ -93,7 +88,6 @@ END_OF_STRING
 task :update_dependencies => set_dependencies(:make_versioned_file_names) do |t|
   execute_task t.name
 end
-
 
 
 desc <<END_OF_STRING
@@ -174,15 +168,10 @@ task :setup_default_tasks => :setup_custom_specs do
   $registry[:compile_dot_net] ||= CompileDotNetTask
   $registry[:set_common_assembly_attributes] ||= SetCommonAssemblyAttributesTask
   $registry[:update_dependencies] ||= UpdateDependenciesTask
-  $registry[:validate_and_minimize_xml_files ] ||= ValidateAndMinimizeXmlFilesTask
+  $registry[:validate_and_minimize_xml_files] ||= ValidateAndMinimizeXmlFilesTask
   $registry[:version_sites] ||= VersionSitesTask
-  $registry[:deploy_to_development] ||= DeployToDevelopmentTask
+  $registry[:get_sources] ||= GetSourcesTask
 
-  if ENV["BUILD_TYPE"] == "local"
-    $registry[:get_sources] ||= GetLocalSourcesTask
-  else
-    $registry[:get_sources] ||= GetSvnSourcesTask
-  end
   if ENV["TRIGGER"] == "IntervalTrigger" && ENV["CODELINE"] != "Release" then
     $registry[:publish] ||= NullTask
     $registry[:purge] ||= NullTask
@@ -215,14 +204,12 @@ end
 
 desc "Prepares build, by creating a Build Specification and the Logger.\n"
 task :setup_build_spec do
+  config = $build_config
 
-  cimaestro_configuration_path = File.join(ENV["BASE_PATH"], ".cimaestro", "cimaestro.rb")
+  cimaestro_configuration_path = File.join(config.base_path, ".cimaestro", "cimaestro.rb")
   import cimaestro_configuration_path if File.exists?(cimaestro_configuration_path)
 
-  build_spec_options = {}
-  build_spec_options[:directory_structure] = ENV["DIRECTORY_STRUCTURE"].to_class unless ENV["DIRECTORY_STRUCTURE"].empty?
-  build_spec = BuildSpec.new(ENV["BASE_PATH"], ENV["SYSTEM"], ENV["CODELINE"], ENV["VERSION"], build_spec_options)
-  runtime_spec = BuildSpec.new(ENV["BASE_PATH"], "STQRuntime", ENV["CODELINE"])
+  build_spec = BuildSpec.new("", "", "", "", config)
 
   if ENV["LOG_TO_FILE"] == "true" then
     logger = NAntCompatibleXmlLogger.new build_spec.system_name, File.join(build_spec.logs_dir_path, "build-results.xml")
@@ -231,7 +218,6 @@ task :setup_build_spec do
   end
 
   $registry[:build_spec] = build_spec
-  $registry[:runtime_spec] = runtime_spec
   $registry[:logger] = logger
 end
 

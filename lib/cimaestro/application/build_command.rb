@@ -1,19 +1,37 @@
+require 'cimaestro/configuration/build_config'
+
 module CIMaestro
   module Application
-    class BuilderCommand
-      include CommandLineParser, CommandLineOptions
+    class BuildCommand < CommandLineCommand
+
+
+      def desc
+        "Builds a system."
+      end
+
+      def parse_args(args)
+        parse(args, BUILD_OPTIONS.merge(CONFIGURATION_OPTIONS))
+      end
+
+      def configure_build(options)
+        Rake.application.options.trace = options.trace if options.trace
+        $build_config = BuildConfig.load
+
+        [:system_name, :codeline_name, :trigger_type, :task_name, :base_path, :directory_structure].each do |item|
+          $build_config.send(item.to_s + "=", options.send(item)) if options.send(item)
+        end
+      end
+
+      def prepare_build(args)
+        configure_build(parse_args(args))
+      end
 
       def run(args)
-        options = parse(args, BUILD_OPTIONS.merge(CONFIGURATION_OPTIONS))
+        prepare_build(args)
 
         FileUtils.cd(CIMaestro::ROOT_PATH, :verbose => true) do
-          cmd = "rake SYSTEM=#{options.system_name} CODELINE=#{options.codeline_name} VERSION=#{options.version_number} TRIGGER=#{options.trigger_type} "
-          cmd += "BASE_PATH=#{options.base_path} " if options.base_path
-          cmd += "DIRECTORY_STRUCTURE=#{options.directory_structure} " if options.directory_structure
-          cmd += "--trace " if options.trace
-          cmd += "#{options.task_name}"
-          puts cmd
-          Kernel.system(cmd)
+          Rake.application.rake_require 'cimaestro'
+          Rake.application[$build_config.task_name].invoke
         end
       end
     end

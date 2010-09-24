@@ -25,44 +25,6 @@ module Build
     end
   end
 
-  class DeployToDevelopmentTask < AbstractPublishTask
-    def initialize(rake_name, build_spec, logger)
-      super(rake_name, build_spec, logger)
-    end
-
-    def setup
-      setup_asmx_sites
-      setup_asp_sites
-    end
-
-    protected
-
-    def setup_wcf_sites
-      setup_sites(ProjectType::WCF_SITE, Build::WCF_SITES_DEPLOY_PATH)
-    end
-
-    def setup_asmx_sites
-      setup_sites(ProjectType::WEB_SERVICE, Build::WEB_SERVICES_DEPLOY_PATH)
-    end
-
-    def setup_asp_sites
-      setup_sites(ProjectType::SITE, Build::SITES_DEPLOY_PATH)
-    end
-
-    def setup_sites(project_type, deploy_path)
-      src_dst = {}
-      build_spec.get_projects_of([project_type]).each do |proj|
-        src = File.join(build_spec.latest_artifacts_dir_path, File.basename(proj.path))
-        dst = File.join(deploy_path, build_spec.system_name, build_spec.codeline, proj.name)
-        src_dst[src] = dst
-        if File.exists?(File.join(src, "Development.config")) then
-          src_dst[File.join(src, "Development.config")] = File.join(dst, "Web.Config")
-        end
-      end
-      @artifacts[project_type] = src_dst if ENV["BUILD_TYPE"] == "integration"
-    end
-  end
-
   class PublishTask < AbstractPublishTask
     def initialize(rake_name, build_spec, logger)
       super(rake_name, build_spec, logger)
@@ -166,13 +128,13 @@ module Build
     def execute
       @sites.each do | site |
         File.open(File.join(site.path, "version.htm"), "w") do |file|
-          file.puts "Version: " + build_spec.version
+          file.puts "Version: " + build_spec.version.to_s
           file.puts "Date: " + Time.now.to_s
         end
       end
       @sites.each do | site |
         File.open(File.join(site.path, "buildVersion.js"), "w") do |file|
-          file.puts 'var BUILD_VERSION = "' + build_spec.version + '";'
+          file.puts 'var BUILD_VERSION = "' + build_spec.version.to_s + '";'
         end
       end
     end

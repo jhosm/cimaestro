@@ -1,3 +1,7 @@
+require 'cimaestro/configuration/build_config'
+require 'forwardable'
+
+
 module BuildTrigger
   FORCED = "forced"
 end
@@ -26,24 +30,36 @@ module Build
 end
 
 module Build::ShellUtils
-  def exec_and_log(command, result_codes_to_ignore = [])
-    command_log_file = "#{UUID.new.to_s}_sh_log.txt"
+  def capture_output
+    orig_stderr = $stderr
+    orig_stdout = $stdout
+    out = StringIO.new
+    $stderr = out
+    $stdout = out
+    yield
+    return out
+  ensure
+    $stderr = orig_stderr
+    $stdout = orig_stdout
+  end
 
-    begin
-      logger.log_msg(command)
-      sh(command + " > #{command_log_file}") do |ok, res|
-        if !ok && !result_codes_to_ignore.include?(res.exitstatus)
-          raise command + " failed with result code (" + res.exitstatus.to_s + ")"
+  def exec_and_log(command, result_codes_to_ignore = [])
+    logger.log_msg(command)
+    log = capture_output do
+      begin
+        verbose_flag = RakeFileUtils.verbose_flag
+        RakeFileUtils.verbose_flag = false
+        sh(command, :verbose=>false) do |ok, res|
+          if !ok && !result_codes_to_ignore.include?(res.exitstatus)
+            raise command + " failed with result code (" + res.exitstatus.to_s + ")"
+          end
         end
-      end
-    ensure
-      if File.exist?(command_log_file)
-        File.open(command_log_file) do |sh_log|
-          logger.log_msg(sh_log.read)
-        end
-        File.delete(command_log_file)
+      ensure
+        RakeFileUtils.verbose_flag = verbose_flag
       end
     end
+    logger.log_msg(log.string)
+
   end
 end
 
@@ -74,53 +90,37 @@ class Project
 end
 
 module CIMaestro
-  module BuildConfiguration
+  module Configuration
 
     class BuildSpec
 
       extend Forwardable
       def_delegators :@directory_structure, :system_base_path, :working_dir_path, :solution_dir_path, :latest_artifacts_dir_path,
-                     :artifacts_dir_path, :lib_dir_path, :logs_dir_path,  :cimaestro_dir_path, :solution_dir, :cimaestro_dir
+                     :artifacts_dir_path, :lib_dir_path, :logs_dir_path, :cimaestro_dir_path, :solution_dir, :cimaestro_dir
+
+      def_delegators :@global_conf, :system_name, :codeline_name, :version_number, :version_number=
 
       alias :project_dir_path :system_base_path
-      alias :build_scripts_dir_path :cimaestro_dir_path 
+      alias :build_scripts_dir_path :cimaestro_dir_path
+      alias :version :version_number
+      alias :codeline :codeline_name
 
-      attr_reader :system_name, :codeline, :custom_specs
-      attr_accessor :base_path, :version
+      attr_reader :custom_specs
+      attr_accessor :base_path
 
-      def initialize(base_path, system, codeline, version, options = {})
-        ArgValidation.check_empty_string(base_path, :base_path)
-        ArgValidation.check_empty_string(system, :system)
-        ArgValidation.check_empty_string(codeline, :codeline)
-        ArgValidation.check_empty_string(version, :version)
+      def initialize(base_path, system, codeline, version, conf = BuildConfig.load)
 
-        @base_path = base_path
-        @system_name = system
-        @codeline = codeline
-        @version = version
+        conf.base_path = base_path unless base_path.empty?
+        @base_path = conf.base_path
+
         @custom_specs = {}
 
-        @build_options = options
+        @global_conf = conf
+        @global_conf.system_name = system unless system.empty?
+        @global_conf.codeline_name = codeline unless codeline.empty?
+        @global_conf.version_number = version unless version.empty?
 
-        @build_options.reverse_merge!({
-          :directory_structure=>DefaultDirectoryStructure
-        })
-
-        @directory_structure = @build_options[:directory_structure].new(base_path, system_name, codeline)
-
-        @build_options.reverse_merge!({
-          :source_control=>SourceControl::FileSystem
-        })
-        if not @build_options.include?(:source_control_repository_path) and
-           (not @build_options.include?(:source_control) or not @build_options[:source_control] == SourceControl::FileSystem) then
-          raise Exceptions::InvalidBuildSpecException, "You've specified a non-default :source_control. Please specify your :source_control_repository_path."
-        end
-
-        @build_options.reverse_merge!({
-          :source_control_repository_path=>solution_dir_path,
-          :source_control_username=>"",
-          :source_control_password=>""
-        })
+        @directory_structure = @global_conf.directory_structure.new(@global_conf.base_path, @global_conf.system_name, @global_conf.codeline_name)
 
       end
 
@@ -194,10 +194,10 @@ module CIMaestro
       end
 
       def src_control
-        @build_options[:source_control].new(working_dir_path,
-                                            @build_options[:source_control_repository_path],
-                                            @build_options[:source_control_username],
-                                            @build_options[:source_control_password])
+        @global_conf.source_control.type.new(working_dir_path,
+                                             @global_conf.source_control.repository_path,
+                                             @global_conf.source_control.username,
+                                             @global_conf.source_control.password)
       end
     end
 

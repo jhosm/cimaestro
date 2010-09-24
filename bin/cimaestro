@@ -1,122 +1,14 @@
 #!/usr/bin/env ruby
+require 'rubygems'
+require 'bundler'
+Bundler.setup
+
 cimaestro_dir = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(cimaestro_dir) unless $LOAD_PATH.include?(cimaestro_dir)
 
 require 'optparse'
 require 'ostruct'
-require 'cimaestro'
+require 'required_references'
 
-class CommandLineParser
 
-  def self.parse(args)
-
-    options = OpenStruct.new
-    options.verbose = false
-    options.logfile = nil
-    options.system_name = ''
-    options.codeline_name = ''
-    options.base_path = pwd
-    options.task_name = :default
-    options.trigger = BuildTrigger::FORCED
-    options.version = "0.0.0.0"
-    options.setup = false
-    options.build = false
-    options.directory_structure = ""
-
-    opts = OptionParser.new do |opts|
-
-      # Set a banner, displayed at the top
-      # of the help screen.
-      opts.banner = "Usage: cimaestro [options]"
-
-      opts.on('-v', '--verbose', 'Output more information') do
-        options.verbose = true
-      end
-
-      opts.on('-b', '--build', 'Do a build') do
-        options.build = true
-      end
-
-      opts.on('-S NAME', '--system NAME', 'The NAME of the system to be built') do |name|
-        options.system_name = name
-      end
-
-      opts.on('-c NAME', '--codeline NAME', 'The NAME of the codeline to build') do |name|
-        options.codeline_name = name
-      end
-
-      opts.on('-p', '--path PATH', 'The base path of the system\'s directory.', 'Defaults to the current directory.') do |base_path|
-        options.base_path = base_path
-      end
-
-      opts.on('-T TASK_NAME','--task TASK_NAME', 'The TASK_NAME to execute.','Defaults to :default') do |task_name|
-        options.task_name = task_name
-      end
-
-      opts.on('-t TRIGGER_TYPE', '--trigger TRIGGER_TYPE', 'What triggered the build.','Defaults to "forced".') do |trigger_type|
-        options.trigger=trigger_type
-      end
-
-      opts.on('-n VERSION_NUMBER','--version_number VERSION_NUMBER', 'The version of the build, if it succeeds.') do |version_number|
-        options.version=version_number
-      end
-
-      opts.on('-d DIRECTORY_STRUCTURE','--directory_structure DIRECTORY_STRUCTURE', 'The name of the Ruby class which defines', 'the directory structure.', 'Check CIMaestro::BuildConfiguration::DefaultDirectoryStructure docs.') do |directory_structure|
-        options.directory_structure=directory_structure
-      end
-      
-      opts.on('-s', '--setup [GEM_HOME]', 'Setup cimaestro environment,',
-              'If GEM_HOME is not specified, bundler\'s',
-              'default will be used.') do |gem_home|
-        options.setup = true
-        options.gem_home = gem_home || ''
-      end
-
-      # This displays the help screen, all programs are
-      # assumed to have this option.
-      opts.on('-h', '--help', 'Display this screen') do
-        puts opts
-        exit
-      end
-
-      opts.on_tail('-V', '--version', "Show version") do
-        puts CIMaestro::CIMaestro::VERSION
-        exit
-      end
-    end
-
-    opts.parse!(args)
-    options
-  end
-end
-
-options = CommandLineParser.parse(ARGV)
-
-if options.setup then
-  FileUtils.cd(File.dirname(File.dirname(__FILE__)), :verbose => true) do |dir|
-    cmd = "bundle install #{options.gem_home} --without development"
-    puts cmd
-    exit(system(cmd))
-  end
-end
-
-if options.build then
-
-  if options.system_name.empty?
-    puts "Please specify --system NAME."
-    exit 1
-  end
-  if options.codeline_name.empty?
-    puts "Please specify --codeline NAME."
-    exit 1
-  end
-
-  FileUtils.cd(options.base_path, :verbose => true) do
-    cmd = "rake SYSTEM=#{options.system_name} CODELINE=#{options.codeline_name} VERSION=#{options.version} BASE_PATH=#{options.base_path} TRIGGER=#{options.trigger} DIRECTORY_STRUCTURE=#{options.directory_structure} #{options.task_name}"
-    puts cmd
-    exit(system(cmd))
-  end
-end
-
-puts 'Nothing to do... Make sure you\'ve set --setup or --build.'
-puts opts
+exit CIMaestro::Application::CommandLine.run

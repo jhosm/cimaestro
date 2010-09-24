@@ -10,9 +10,3 @@ require 'source_control_tasks'
 require 'web_optimization_tasks'
 require 'xml_tasks'
 
-module CIMaestro
-  class CIMaestro
-    VERSION = '1.0.0'
-  end
-end
-

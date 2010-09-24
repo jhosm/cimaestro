@@ -12,6 +12,9 @@ Hoe.spec 'cimaestro' do
 end
 
 $:.unshift "lib"
+$:.unshift "spec"
+
+require 'lib/required_references'
 
 namespace :cimaestro do
   desc "do a full build"
@@ -40,7 +43,12 @@ namespace :cimaestro do
 
 
   RCov::VerifyTask.new(:verify_rcov => 'cimaestro:spec_and_rcov') do |t|
-    t.threshold = 78
+    t.threshold = 77.13
     t.index_html = 'coverage/index.html'
+  end
+
+  task 'install' do
+    sh 'rake gem'
+    sh "gem install pkg/cimaestro-#{CIMaestro::CIMaestro::VERSION}.gem"
   end
 end
