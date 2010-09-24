@@ -26,7 +26,14 @@ module CIMaestro
 
       def initialize(base_path, system_name, codeline)
         ArgValidation.check_empty_string(system_name, :system_name)
-        ArgValidation.check_empty_string(codeline, :codeline)
+        if codeline.blank? then
+          raise ::CIMaestro::Exceptions::InvalidBuildSpecException, <<HERE
+
+    The name of the CODELINE to build was not specified.
+    When using #{self.class} you must specify it.
+    Check the help for the build command for directions on how to provide it.
+HERE
+        end
 
         @base_path = base_path
         @system_name = system_name

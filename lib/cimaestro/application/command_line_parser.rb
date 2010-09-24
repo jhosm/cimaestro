@@ -18,10 +18,8 @@ module CIMaestro
         option_definition[0].index(' ') == nil
       end
 
-      def parse(args, options_definition_orig)
-        options_definition = options_definition_orig.clone
-
-        options =  options_definition.merge(options_definition) {|key, value, newval|  value[:option]}
+      def parse(args, options_definition)
+        options =  options_definition
 
         options_values = {}
         parser = OptionParser.new do |parser|
@@ -45,19 +43,7 @@ module CIMaestro
           end
         end
 
-        #Remove all non-switch options without defaults
-        options_with_defaults =  options_definition.delete_if {|key, value| !is_switch?(value[:option]) and not value.include?(:default)}
-
-        options_defaults = options_with_defaults.merge(options_with_defaults) {|key, value, newval|  value[:default] || false}
-
         parser.parse!(args)
-
-        options_values.reverse_merge!(options_defaults)
-
-        missing_options = options.keys - options_values.keys
-        if missing_options.size > 0 then
-          raise OptionNotSpecifiedException, "Command option '#{options[missing_options[0]][0]}' was not specified." if options.keys - options_values.keys != []
-        end
 
         OpenStruct.new(options_values)
       end

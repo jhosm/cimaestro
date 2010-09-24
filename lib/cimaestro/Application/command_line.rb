@@ -47,7 +47,7 @@ module CIMaestro
             command = self.select_command(args)
             args.shift
             command.run(args)
-          rescue OptionNotSpecifiedException => onse
+          rescue ::CIMaestro::Exceptions::InvalidBuildSpecException => onse
             puts onse.message
             command.run(['-h'])
             return 1
@@ -58,7 +58,7 @@ module CIMaestro
             return 2
           rescue Exception => e
             puts e.message
-            #puts e.backtrace
+            puts e.backtrace
             return 999
           end
           return 0

@@ -20,6 +20,14 @@ module CIMaestro
         [:system_name, :codeline_name, :trigger_type, :task_name, :base_path, :directory_structure].each do |item|
           $build_config.send(item.to_s + "=", options.send(item)) if options.send(item)
         end
+
+        if $build_config.system_name.blank? then
+          raise ::CIMaestro::Exceptions::InvalidBuildSpecException, <<HERE
+
+    The SYSTEM_NAME was not specified, so I don't know what system to build.
+    Check the help for the build command for directions on how to provide it.
+HERE
+        end
       end
 
       def prepare_build(args)

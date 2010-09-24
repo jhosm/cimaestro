@@ -154,7 +154,7 @@ module CIMaestro
             if projects == nil
               result.include(File.join(working_dir_path, "**", "*." + extension))
             else
-              [projects] unless projects.respond_to? :each
+              projects = [projects] unless projects.respond_to? :each
               projects.each do |project|
                 path = File.join(working_dir_path, project.full_name)
                 result.include(File.join(path, "**", "*." + extension))
