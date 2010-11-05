@@ -16,16 +16,17 @@ module CIMaestro
         :trigger_type =>['-t TRIGGER_TYPE', '--trigger TRIGGER_TYPE', 'What triggered the build.',
                                                                          'Defaults to "forced".'],
         :version_number => ['-n VERSION_NUMBER','--version_number VERSION_NUMBER', 'The version of the build, if it succeeds.'],
-        :trace => ['--trace', 'Print the stack trace, if the build throws.']
-      }
-
-      CONFIGURATION_OPTIONS = {
+        :trace => ['--trace', 'Print the stack trace, if the build throws.'],
         :base_path => ['-p BASE_PATH', '--path BASE_PATH', 'The system''s base path. Inside this directory ',
                                                                 'should be the system''s directory.'],
         :directory_structure => ['-d DIRECTORY_STRUCTURE', '--directory_structure DIRECTORY_STRUCTURE', 'The name of the Ruby class which defines',
                                                                                                    'the directory structure.',
                                                                                                    'Check CIMaestro::Configuration::',
                                                                                                    'DefaultDirectoryStructure docs.']
+
+      #"source_control.type", "source_control.repository_path", "source_control.username", "source_control.password"
+
+
       }
     end
   end

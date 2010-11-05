@@ -124,13 +124,16 @@ module CIMaestro
         @directory_structure = value
       end
 
-      def merge!(other_conf)
+      def merge!(other_conf, options = {:override=>false})
         [:system_name, :codeline_name, :version_number, :trigger_type, :task_name, :base_path, :directory_structure].each do |item|
-          self.send(item.to_s + "=", other_conf.send(item)) if instance_variable_get("@#{item}").blank?
-        end
-        @source_control.merge!(other_conf.source_control)
-      end
+          if (other_conf.send(item) and
+              (options[:override] or instance_variable_get("@#{item}").blank?))
 
+            self.send(item.to_s + "=", other_conf.send(item)) 
+          end
+        end
+        @source_control.merge!(other_conf.source_control, options) if other_conf.source_control
+      end
     end
   end
 end

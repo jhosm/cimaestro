@@ -34,9 +34,14 @@ module CIMaestro
         @repository_path = value
       end
 
-      def merge!(other_conf)
+      def merge!(other_conf, options = {:override=>false})
         [:type, :repository_path, :username, :password].each do |item|
-          self.send(item.to_s + "=", other_conf.send(item)) if instance_variable_get("@#{item}").blank?
+          other_conf_has_item = (other_conf.class == self.class and not other_conf.instance_variable_get("@#{item}").blank?) or
+                  (other_conf.class != self.class and other_conf.send(item))
+          should_set_item =  (options[:override] or instance_variable_get("@#{item}").blank?)
+          if (other_conf_has_item and should_set_item) then
+            self.send(item.to_s + "=", other_conf.send(item))
+          end
         end
       end
 
