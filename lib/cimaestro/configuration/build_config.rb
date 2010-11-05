@@ -1,51 +1,69 @@
-require 'yaml'
+require 'active_support/core_ext/object/blank'
+require 'cimaestro/configuration/serializer'
+require 'cimaestro/configuration/path_builder'
+require 'cimaestro/configuration/system_directory_structure_config'
 
 module CIMaestro
   module Configuration
     class BuildConfig
-      
-      GLOBAL_CONFIG_PATH = File.join(CIMaestro::ROOT_PATH, "config.yaml")
+      include PathBuilder
 
       class << self
-        def load
-          result = nil
+        include PathBuilder
 
-          if File.exist?(GLOBAL_CONFIG_PATH) then
-            File.open(GLOBAL_CONFIG_PATH, "r") do |file|
-              result = YAML::load(file)
-            end
-          end
+        def load(system_name = "", codeline_name = "", base_path = "")
+          result = BuildConfig.new(system_name, codeline_name, base_path)
 
-          result ||= BuildConfig.new
+          path = get_config_path(result)
+
+          config = Serializer.new(path).deserialize()
+          result = config[0] if config != nil
+
+          dir_structure = SystemDirectoryStructureConfig.new(result).get_directory_structure()
+          result.directory_structure = dir_structure unless dir_structure == nil
+
           result
         end
 
-        def clear
-          File.delete(GLOBAL_CONFIG_PATH) if File.exist?(GLOBAL_CONFIG_PATH)
-          load
+        def clear(system_name = "", codeline_name = "", base_path = "")
+          config_path = get_config_path(BuildConfig.new(system_name, codeline_name))
+          Serializer.new(config_path).clear()
+          config = self.load(system_name, codeline_name, base_path)
+          SystemDirectoryStructureConfig.new(config).set_directory_structure()
+          return config
         end
       end
 
-      attr_reader :source_control, :system_name, :codeline_name
+      attr_reader :source_control, :system_name, :codeline_name, :base_path
 
-      def initialize
+      def initialize(system_name = "", codeline_name = "", base_path = "")
         @source_control = SourceControl.new
+        @system_name = system_name
+        @codeline_name = codeline_name
+        @base_path = base_path
       end
 
-      def save
-        File.open(GLOBAL_CONFIG_PATH, "w+") do |file|
-          YAML::dump(self, file)
+      def save()
+        config_path = get_config_path(self)
+        serializer = Serializer.new(config_path)
+        config = serializer.deserialize()
+        if config != nil then
+          config[0] = self
+        else
+          config = [self]
         end
+        serializer.serialize(* config)
+
+        SystemDirectoryStructureConfig.new(self).set_directory_structure()
       end
 
       def set_default_repository_path
-        if @system_name != nil and not @system_name.empty? and
-                @codeline_name != nil and not @codeline_name.empty? and
-                @base_path != nil and not @base_path.empty? and
+        if not @system_name.blank? and
+                not @codeline_name.blank? and
+                not @base_path.blank? and
                 @source_control.is_using_default_type? and
                 not @source_control.has_repository_path? then
-          ds = directory_structure.new(base_path, system_name, codeline_name)
-          @source_control.repository_path = ds.solution_dir_path
+          @source_control.repository_path = create_directory_structure.solution_dir_path
         end
       end
 
@@ -66,7 +84,7 @@ module CIMaestro
 
       def version_number=(value)
         if value === String then
-          @version_number = BuildVersion.new(value) 
+          @version_number = BuildVersion.new(value)
         else
           @version_number = value
         end
@@ -88,13 +106,13 @@ module CIMaestro
         @trigger_type = value
       end
 
-      def base_path
-        @base_path ||= ""
-      end
-
       def base_path=(value)
         @base_path = value
         set_default_repository_path()
+      end
+
+      def create_directory_structure
+        directory_structure.new(base_path, system_name, codeline_name)
       end
 
       def directory_structure
@@ -102,7 +120,15 @@ module CIMaestro
       end
 
       def directory_structure=(value)
-        @directory_structure = value.to_class
+        value = value.to_class if value.class != Class
+        @directory_structure = value
+      end
+
+      def merge!(other_conf)
+        [:system_name, :codeline_name, :version_number, :trigger_type, :task_name, :base_path, :directory_structure].each do |item|
+          self.send(item.to_s + "=", other_conf.send(item)) if instance_variable_get("@#{item}").blank?
+        end
+        @source_control.merge!(other_conf.source_control)
       end
 
     end

@@ -44,11 +44,12 @@ CIMaestro has the following major features:
     * Is is possible to set thresholds that must be met for the build to be successful
     * The thresholds are updated automatically when you raise the base. If you achieve a certain quality, you don't want to let it degrade
 * Publishing
-    * Puts you artifacts on a well-know location with a consistent structure
+    * Puts your artifacts on a well-know location with a consistent structure
 
 == SYNOPSIS:
 
-  FIX (code sample of usage)
+  At the command line, type:
+  $ cimaestro
 
 == REQUIREMENTS:
 
@@ -70,7 +71,7 @@ After checking out the source (git@github.com:jhosm/cimaestro.git), run:
   $ rake verify_rcov, and all the tests should pass
 
 To create a new cimaestro gem:
-  $ Make sure Manifest.txt contains all the file to be contained in the gem
+  $ Make sure Manifest.txt contains all the files to be contained in the gem
   $ At the CIMaestro project root directory:
     $ Do a "bundler pack" (check bundler site for more info)
     $ run "rake gem", and the gem file will be in the "pkg" directory.

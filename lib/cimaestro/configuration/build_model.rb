@@ -49,7 +49,7 @@ module Build::ShellUtils
       begin
         verbose_flag = RakeFileUtils.verbose_flag
         RakeFileUtils.verbose_flag = false
-        sh(command, :verbose=>false) do |ok, res|
+        sh(command) do |ok, res|
           if !ok && !result_codes_to_ignore.include?(res.exitstatus)
             raise command + " failed with result code (" + res.exitstatus.to_s + ")"
           end

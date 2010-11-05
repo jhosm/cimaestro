@@ -5,22 +5,24 @@ describe AnalyzeCodeTask do
   before(:each) do
     @task, @build_spec = create_task(AnalyzeCodeTask)
     @task.stub!(:sh)
-    @task.setup
-    SystemFileStructureMocker.create_with_projects(@build_spec, []).
+    SystemFileStructureMocker.create_with_projects(@build_spec, [ProjectType::ASSEMBLY + "-AnalyzeCode"]).
             add_build_scripts_dir.
-            add_logs_dir
-    cp File.join(TESTS_SOURCE_FILES, "24-issues-report-fxcop.xml"), @task.benchmark_report_path, :verbose=>true
+            add_logs_dir.
+            create_working_dir
+    cp File.join(TESTS_SOURCE_FILES, "24-issues-report-fxcop.xml"), @task.benchmark_report_path
+    @task.setup
+
   end
 
   it "should create a benchmark file if it does not exist" do
-    cp File.join(TESTS_SOURCE_FILES, "0-issues-report-fxcop.xml"), @task.report_path, :verbose=>true
+    cp File.join(TESTS_SOURCE_FILES, "0-issues-report-fxcop.xml"), @task.report_path
     File.should_receive(:exist?).any_number_of_times.and_return(false)
     FileUtils.should_receive(:cp).with(/report-fxcop.xml/,@task.benchmark_report_path)
     @task.execute
   end
 
   it "should add the build version to the benchmark report, when creating a new one" do
-    cp File.join(TESTS_SOURCE_FILES, "0-issues-report-fxcop.xml"), @task.report_path, :verbose=>true
+    cp File.join(TESTS_SOURCE_FILES, "0-issues-report-fxcop.xml"), @task.report_path
     rm_r @task.benchmark_report_path
 
     @task.execute
@@ -30,29 +32,29 @@ describe AnalyzeCodeTask do
   end
 
   it "should fail if the number of issues has increased within the same major.minor version" do
-    cp File.join(TESTS_SOURCE_FILES, "25-issues-report-fxcop.xml"), @task.report_path, :verbose=>true
+    cp File.join(TESTS_SOURCE_FILES, "25-issues-report-fxcop.xml"), @task.report_path
     lambda {@task.execute}.should raise_error
   end
 
   it "should not fail if the number of issues has not increased within the same major.minor version" do
-    cp File.join(TESTS_SOURCE_FILES, "24-issues-report-fxcop.xml"), @task.report_path, :verbose=>true
+    cp File.join(TESTS_SOURCE_FILES, "24-issues-report-fxcop.xml"), @task.report_path
     @task.execute
   end
 
   it "should fail if the number of issues has not decreased by more than twenty when a version increases" do
     @build_spec.version_number = "1.5.9.0"
-    cp File.join(TESTS_SOURCE_FILES, "4-issues-report-fxcop.xml"), @task.report_path, :verbose=>true
+    cp File.join(TESTS_SOURCE_FILES, "4-issues-report-fxcop.xml"), @task.report_path
     lambda {@task.execute}.should raise_error
   end
 
   it "should not fail if the number of issues is zero, regardless of versions" do
-    cp File.join(TESTS_SOURCE_FILES, "0-issues-report-fxcop.xml"), @task.report_path, :verbose=>true
+    cp File.join(TESTS_SOURCE_FILES, "0-issues-report-fxcop.xml"), @task.report_path
     @task.execute
   end
 
   it "should not fail if the number of issues decreased by more than twenty when a version increases" do
     @build_spec.version_number = "2.0.0.0"
-    cp File.join(TESTS_SOURCE_FILES, "3-issues-report-fxcop.xml"), @task.report_path, :verbose=>true
+    cp File.join(TESTS_SOURCE_FILES, "3-issues-report-fxcop.xml"), @task.report_path
     @task.execute
   end
 

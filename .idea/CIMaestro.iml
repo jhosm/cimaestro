@@ -9,72 +9,57 @@
     </requirement>
     <requirement>
       <requirement>
-        <dependency name="bundler" version="0.9.26" bound="GREATER_OR_EQUAL" git="false" />
-      </requirement>
-      <source from="pkg/cimaestro-1.0.0/Gemfile" />
-    </requirement>
-    <requirement>
-      <requirement>
         <dependency name="diff-lcs" version="1.1.2" bound="GREATER_OR_EQUAL" git="false" />
       </requirement>
       <source from="Gemfile" />
-      <source from="pkg/cimaestro-1.0.0/Gemfile" />
     </requirement>
     <requirement>
       <requirement>
         <dependency name="hoe" version="2.6.1" bound="GREATER_OR_EQUAL" git="false" />
       </requirement>
       <source from="Gemfile" />
-      <source from="pkg/cimaestro-1.0.0/Gemfile" />
     </requirement>
     <requirement>
       <requirement>
         <dependency name="linecache" version="0.43" bound="GREATER_OR_EQUAL" git="false" />
       </requirement>
       <source from="Gemfile" />
-      <source from="pkg/cimaestro-1.0.0/Gemfile" />
     </requirement>
     <requirement>
       <requirement>
         <dependency name="rake" version="0.8.7" bound="GREATER_OR_EQUAL" git="false" />
       </requirement>
       <source from="Gemfile" />
-      <source from="pkg/cimaestro-1.0.0/Gemfile" />
     </requirement>
     <requirement>
       <requirement>
         <dependency name="rcov" version="0.9.8" bound="GREATER_OR_EQUAL" git="false" />
       </requirement>
       <source from="Gemfile" />
-      <source from="pkg/cimaestro-1.0.0/Gemfile" />
     </requirement>
     <requirement>
       <requirement>
         <dependency name="rspec" version="1.3.0" bound="GREATER_OR_EQUAL" git="false" />
       </requirement>
       <source from="Gemfile" />
-      <source from="pkg/cimaestro-1.0.0/Gemfile" />
     </requirement>
     <requirement>
       <requirement>
         <dependency name="ruby-debug-base" version="0.10.3" bound="GREATER_OR_EQUAL" git="false" />
       </requirement>
       <source from="Gemfile" />
-      <source from="pkg/cimaestro-1.0.0/Gemfile" />
     </requirement>
     <requirement>
       <requirement>
         <dependency name="ruby-debug-ide" version="0.4.9" bound="GREATER_OR_EQUAL" git="false" />
       </requirement>
       <source from="Gemfile" />
-      <source from="pkg/cimaestro-1.0.0/Gemfile" />
     </requirement>
     <requirement>
       <requirement>
         <dependency name="uuid" version="2.3.1" bound="GREATER_OR_EQUAL" git="false" />
       </requirement>
       <source from="Gemfile" />
-      <source from="pkg/cimaestro-1.0.0/Gemfile" />
     </requirement>
   </component>
   <component name="NewModuleRootManager">
@@ -102,6 +87,7 @@
     <orderEntry type="library" scope="PROVIDED" name="[gem] macaddr (v1.0.0, C:/Ruby187/lib/ruby/gems/1.8/gems/macaddr-1.0.0)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] uuid (v2.3.1, C:/Ruby187/lib/ruby/gems/1.8/gems/uuid-2.3.1)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] activesupport (v2.3.8, C:/Ruby187/lib/ruby/gems/1.8/gems/activesupport-2.3.8)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] json_pure (v1.4.3, C:/Ruby187/lib/ruby/gems/1.8/gems/json_pure-1.4.3)" level="application" />
   </component>
   <component name="RModuleSettingsStorage" number="2" string0="$MODULE_DIR$/spec" string1="$MODULE_DIR$/lib" />
 </module>

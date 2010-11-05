@@ -1,9 +1,10 @@
 $stderr =  StringIO.new
 
+$:.unshift "../lib"
 require "spec"
 require "uuid"
-require "lib/required_references"
-require "lib/cimaestro"
+require "required_references"
+require "cimaestro"
 require "system_file_structure_mocker"
 
 TESTS_SOURCE_FILES = "./spec/TestSourceFiles"

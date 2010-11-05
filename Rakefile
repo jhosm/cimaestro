@@ -28,6 +28,7 @@ namespace :cimaestro do
   desc "Clean up intermediate files of rspec"
   task :clean_rspec_files => 'spec_and_rcov' do
     rm Dir.glob('*sh_log.txt')
+    rm Dir.glob('_config.yaml')
     rm_rf 'lib/_Projectos'
   end
   
@@ -43,7 +44,7 @@ namespace :cimaestro do
 
 
   RCov::VerifyTask.new(:verify_rcov => 'cimaestro:spec_and_rcov') do |t|
-    t.threshold = 77.13
+    t.threshold = 81.3
     t.index_html = 'coverage/index.html'
   end
 

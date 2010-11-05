@@ -1,8 +1,13 @@
 require 'cimaestro/configuration/build_config'
+require 'cimaestro/configuration/invalid_build_spec_exception'
+include CIMaestro::Exceptions
 
 module CIMaestro
   module Application
+    include Exceptions
+
     class BuildCommand < CommandLineCommand
+      include Configuration
 
 
       def desc
@@ -15,18 +20,24 @@ module CIMaestro
 
       def configure_build(options)
         Rake.application.options.trace = options.trace if options.trace
-        $build_config = BuildConfig.load
 
-        [:system_name, :codeline_name, :trigger_type, :task_name, :base_path, :directory_structure].each do |item|
-          $build_config.send(item.to_s + "=", options.send(item)) if options.send(item)
-        end
-
-        if $build_config.system_name.blank? then
-          raise ::CIMaestro::Exceptions::InvalidBuildSpecException, <<HERE
+        if options.system_name.blank? then
+          raise InvalidBuildSpecException, <<HERE
 
     The SYSTEM_NAME was not specified, so I don't know what system to build.
     Check the help for the build command for directions on how to provide it.
 HERE
+        end
+        global_config = BuildConfig.load()
+        [:system_name, :codeline_name, :base_path, :directory_structure].each do |item|
+          global_config.send(item.to_s + "=", options.send(item)) if options.send(item)
+        end
+
+        $build_config = BuildConfig.load(global_config.system_name, global_config.codeline_name, global_config.base_path)
+        $build_config.merge!(global_config)
+
+        [:system_name, :codeline_name, :trigger_type, :task_name, :base_path, :directory_structure].each do |item|
+          $build_config.send(item.to_s + "=", options.send(item)) if options.send(item)
         end
       end
 

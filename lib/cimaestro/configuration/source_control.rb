@@ -34,6 +34,11 @@ module CIMaestro
         @repository_path = value
       end
 
+      def merge!(other_conf)
+        [:type, :repository_path, :username, :password].each do |item|
+          self.send(item.to_s + "=", other_conf.send(item)) if instance_variable_get("@#{item}").blank?
+        end
+      end
 
     end
   end
