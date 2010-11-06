@@ -22,11 +22,15 @@ module CIMaestro
         :directory_structure => ['-d DIRECTORY_STRUCTURE', '--directory_structure DIRECTORY_STRUCTURE', 'The name of the Ruby class which defines',
                                                                                                    'the directory structure.',
                                                                                                    'Check CIMaestro::Configuration::',
-                                                                                                   'DefaultDirectoryStructure docs.']
-
-      #"source_control.type", "source_control.repository_path", "source_control.username", "source_control.password"
-
-
+                                                                                                   'DefaultDirectoryStructure docs.'],
+        'source_control!system' => ['--sc_type SOURCE_CONTROL_TYPE', 'The name of the Ruby class which',
+                                                                    ' proxies the source control system'],
+        'source_control!repository_path' => ['--sc_path REPOSITORY_PATH', 'The location of the system',
+                                                                       ' in the source control''s repository.'],
+        'source_control!username' => ['--sc_user USERNAME', 'The user name to use when',
+                                                                       ' talking with the source control.'],
+        'source_control!password' => ['--sc_password PASSWORD', 'The password to use when',
+                                                                       ' talking with the source control.'],
       }
     end
   end

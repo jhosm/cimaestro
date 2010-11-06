@@ -11,14 +11,14 @@ module CIMaestro
 
         conf.directory_structure.should == DefaultDirectoryStructure
         conf.base_path.should == ""
-        conf.source_control.type.should == SourceControl::FileSystem
+        conf.source_control.system.should == SourceControl::FileSystem
         conf.task_name.should == :default
         conf.trigger_type.should == :forced
         conf.version_number.to_s == "0.0.0.0"
 
       end
 
-      it "should define the default directory path when the system and the codeline are defined and the default source control type is set" do
+      it "should define the default directory path when the system and the codeline are defined and the default source control system is set" do
 
         conf = BuildConfig.new
 
@@ -35,12 +35,10 @@ module CIMaestro
 
         system_build_conf.system_name = "yourSystem"
         global_build_conf.system_name = "globaaallll"
-        global_build_conf.base_path = "z:/"
         global_build_conf.source_control.repository_path = '\\wow'
 
         system_build_conf.merge!(global_build_conf)
         system_build_conf.system_name.should == "yourSystem"
-        system_build_conf.base_path.should == "z:/"
         system_build_conf.source_control.repository_path.should == '\\wow'
       end
 

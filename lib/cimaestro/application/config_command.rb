@@ -12,7 +12,7 @@ module CIMaestro
       def run(args)
         options = parse(args, BUILD_OPTIONS)
         config = BuildConfig.load
-        config.merge!(options)
+        config.merge!(options, :override=>true)
 
         config.save
         y BuildConfig.load

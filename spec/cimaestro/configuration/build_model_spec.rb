@@ -71,7 +71,7 @@ module CIMaestro
         fs_build_spec = BuildSpec.new( '../../../..', "Dummy_cimaestro", "Release", "4.5.8.7", conf)
         fs_build_spec.src_control.local_path.should == @build_spec.working_dir_path
 
-        conf.source_control.type = SourceControl::Svn
+        conf.source_control.system = SourceControl::Svn
         conf.source_control.repository_path = "http://local"
         svn_build_spec = BuildSpec.new( '../../../..', "Dummy_cimaestro", "Release", "4.5.8.7", conf)
         svn_build_spec.src_control.local_path.should == @build_spec.working_dir_path

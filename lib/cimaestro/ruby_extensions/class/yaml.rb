@@ -14,4 +14,8 @@ class Class
       out.scalar("tag:ruby.yaml.org,2002:class", self.to_s, :plain)
     end
   end
+
+  def to_class
+    self
+  end
 end

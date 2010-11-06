@@ -4,11 +4,23 @@ module CIMaestro
 
       def parse_options(parser, options, options_values)
         options.each do |name, definition|
-          parser.on(*definition) do |value|
+
+          parser.on(* definition) do |value|
+            name_parts = name.to_s.split('!')
+            option = options_values
+            name_parts.each_index do |i|
+              if name_parts.size - 1 > i then
+                option.new_ostruct_member(name_parts[i])
+                option.send(name_parts[i] + "=", OpenStruct.new)
+                option = option.send(name_parts[i])
+              end
+            end
+
+            option.new_ostruct_member(name_parts.last)
             if is_switch?(definition) then
-              options_values[name] = true
+              option.send(name_parts.last + "=", true)
             else
-              options_values[name] = value
+              option.send(name_parts.last + "=", value)
             end
           end
         end
@@ -21,7 +33,7 @@ module CIMaestro
       def parse(args, options_definition)
         options =  options_definition
 
-        options_values = {}
+        options_values = OpenStruct.new
         parser = OptionParser.new do |parser|
           parse_options(parser, options, options_values)
           yield parser, options, options_values if block_given?
@@ -36,7 +48,7 @@ module CIMaestro
             puts parser
             exit
           end
-    
+
           parser.on_tail('-V', '--version', "Show version") do
             puts CIMaestro::CIMaestro::VERSION
             exit
@@ -45,7 +57,7 @@ module CIMaestro
 
         parser.parse!(args)
 
-        OpenStruct.new(options_values)
+        options_values
       end
     end
   end

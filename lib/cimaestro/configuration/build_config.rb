@@ -11,18 +11,25 @@ module CIMaestro
       class << self
         include PathBuilder
 
+        def exist?(system_name = "", codeline_name = "", base_path = "")
+          load_saved_config(base_path, codeline_name, system_name) != nil
+        end
+
+        def load_saved_config(base_path, codeline_name, system_name)
+          path = get_config_path(BuildConfig.new(system_name, codeline_name, base_path))
+          Serializer.new(path).deserialize()
+        end
+
         def load(system_name = "", codeline_name = "", base_path = "")
-          result = BuildConfig.new(system_name, codeline_name, base_path)
+          saved_config = load_saved_config(base_path, codeline_name, system_name)
 
-          path = get_config_path(result)
+          config = BuildConfig.new(system_name, codeline_name, base_path)
+          config = saved_config[0] if saved_config != nil
 
-          config = Serializer.new(path).deserialize()
-          result = config[0] if config != nil
+          dir_structure = SystemDirectoryStructureConfig.new(config).get_directory_structure()
+          config.directory_structure = dir_structure unless dir_structure == nil
 
-          dir_structure = SystemDirectoryStructureConfig.new(result).get_directory_structure()
-          result.directory_structure = dir_structure unless dir_structure == nil
-
-          result
+          config
         end
 
         def clear(system_name = "", codeline_name = "", base_path = "")
@@ -125,9 +132,12 @@ module CIMaestro
       end
 
       def merge!(other_conf, options = {:override=>false})
+
+        default_config = BuildConfig.new()
+
         [:system_name, :codeline_name, :version_number, :trigger_type, :task_name, :base_path, :directory_structure].each do |item|
-          if (other_conf.send(item) and
-              (options[:override] or instance_variable_get("@#{item}").blank?))
+          if (other_conf.respond_to?(item) and
+              (options[:override] or instance_variable_get("@#{item}").blank? or instance_variable_get("@#{item}") == default_config.instance_variable_get("@#{item}")))
 
             self.send(item.to_s + "=", other_conf.send(item)) 
           end

@@ -194,7 +194,7 @@ module CIMaestro
       end
 
       def src_control
-        @global_conf.source_control.type.new(working_dir_path,
+        @global_conf.source_control.system.new(working_dir_path,
                                              @global_conf.source_control.repository_path,
                                              @global_conf.source_control.username,
                                              @global_conf.source_control.password)
