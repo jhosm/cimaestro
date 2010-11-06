@@ -44,7 +44,7 @@ namespace :cimaestro do
 
 
   RCov::VerifyTask.new(:verify_rcov => 'cimaestro:spec_and_rcov') do |t|
-    t.threshold = 81.3
+    t.threshold = 81.8
     t.index_html = 'coverage/index.html'
   end
 
