@@ -1,5 +1,4 @@
 require 'yaml'
-require 'FileUtils'
 
 module CIMaestro
   module Configuration

@@ -10,5 +10,7 @@ require 'optparse'
 require 'ostruct'
 require 'required_references'
 
-
-exit CIMaestro::Application::CommandLine.run
+result = CIMaestro::Application::CommandLine.run
+puts
+puts "exiting with result code #{result}..."
+exit result

@@ -10,16 +10,8 @@ module CIMaestro
       end
 
       it "should execute bundle install without gem home specified when none is given" do
-        Kernel.should_receive(:system).with("bundle install  --without development")
+        Kernel.should_receive(:system).with("bundle install --deployment --without development")
         InstallCommand.new.run([])
-      end
-
-      it "should execute bundle install with the given gem_home option" do
-        Kernel.should_receive(:system).with("bundle install c:/ --without development")
-        InstallCommand.new.run(["--gem_home", "c:/"])
-
-        Kernel.should_receive(:system).with("bundle install D:/ --without development")
-        InstallCommand.new.run(["-g", "D:/"])
       end
     end
   end

@@ -31,6 +31,7 @@ end
 
 desc "The root task\n"
 task :default => [:post_publish] do
+  $registry[:logger].log_msg("BUILD SUCCEEDED.")
 end
 
 "Default :post_publish, which does nothing. If a project needs customization, it should create a task with the same name in the file referenced in :load_customs_specs.\n"

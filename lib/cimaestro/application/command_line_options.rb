@@ -2,12 +2,6 @@ module CIMaestro
   module Application
     module CommandLineOptions
 
-      INSTALLER_OPTIONS = {
-        :gem_home => ["-g HOME", "--gem_home HOME", 'Setup cimaestro environment,',
-                                                         'If GEM_HOME is not specified, bundler\'s',
-                                                         'default will be used.']
-      }
-
       BUILD_OPTIONS = {
         :system_name => ['-S NAME', '--system NAME', 'The NAME of the system to be built'],
         :codeline_name => ['-c NAME', '--codeline NAME', 'The NAME of the codeline to build'],

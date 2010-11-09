@@ -45,7 +45,7 @@ HERE
       def run(args)
         prepare_build(args)
 
-        FileUtils.cd(CIMaestro::ROOT_PATH, :verbose => true) do
+        FileUtils.cd(CIMaestro::ROOT_PATH) do
           Rake.application.rake_require 'cimaestro'
           Rake.application[$build_config.task_name].invoke
         end

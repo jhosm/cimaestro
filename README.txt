@@ -67,13 +67,14 @@ CIMaestro has the following major features:
 
 After checking out the source (git@github.com:jhosm/cimaestro.git), run:
 
-  $ bundle install, on the home directory
+  $ If you're on Windows, make sure you've installed DevKit.
+  $ ruby ./helpers/installbundledgems.rb i, on the project's home directory
   $ rake verify_rcov, and all the tests should pass
 
 To create a new cimaestro gem:
   $ Make sure Manifest.txt contains all the files to be contained in the gem
   $ At the CIMaestro project root directory:
-    $ Do a "bundler pack" (check bundler site for more info)
+    $ Do a "bundle pack" (check bundler site for more info)
     $ run "rake gem", and the gem file will be in the "pkg" directory.
 
 == LICENSE:
