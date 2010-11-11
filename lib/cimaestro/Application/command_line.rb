@@ -23,7 +23,7 @@ module CIMaestro
           if command == nil then
             show_usage()
 
-            exit
+            return nil
           end
 
           return BuildCommand.new if command.start_with?("--")
@@ -45,8 +45,10 @@ module CIMaestro
         def run(args = ARGV)
           begin
             command = self.select_command(args)
-            args.shift
-            command.run(args)
+            unless command == nil then
+              args.shift
+              command.run(args)
+            end
           rescue ::CIMaestro::Exceptions::InvalidBuildSpecException => onse
             puts onse.message
             command.run(['-h'])
