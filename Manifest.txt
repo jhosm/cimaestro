@@ -12,7 +12,7 @@ lib/cimaestro/application/command_line_parser.rb
 lib/cimaestro/application/config_command.rb
 lib/cimaestro/application/install_command.rb
 lib/cimaestro/application/option_not_specified_exception.rb
-lib/cimaestro/application/smoke_test_command.rb
+lib/cimaestro/application/smoke_command.rb
 lib/cimaestro/application/unknown_application_command_exception.rb
 lib/cimaestro/configuration/build_config.rb
 lib/cimaestro/configuration/build_model.rb
