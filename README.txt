@@ -85,7 +85,7 @@ UBUNTU
   $ rvm gemset use cimaestro
   $ gem install bundler
   $ cd to cimaestro directory
-  $ bundle install --local.
+  $ bundle install --local --binstubs [GEM_HOME]/bin. to know GEM_HOME value, type rvm info.
 
 ALL
 
