@@ -45,17 +45,6 @@ lib/web_optimization_tasks.rb
 lib/xml_tasks.rb
 Manifest.txt
 README.txt
-samples/defaultdirectorystructure/Simple/Release/Artifacts/Latest/Site-SimpleFrontEnd/0.0.0.0version.htm
-samples/defaultdirectorystructure/Simple/Release/Artifacts/Latest/Site-SimpleFrontEnd/0.0.0.0web.html
-samples/defaultdirectorystructure/Simple/Release/Artifacts/Latest/Site-SimpleFrontEnd/buildVersion.js
-samples/defaultdirectorystructure/Simple/Release/Artifacts/Latest/Site-SimpleFrontEnd/version.htm
-samples/defaultdirectorystructure/Simple/Release/Artifacts/Latest/Site-SimpleFrontEnd/web.html
-samples/defaultdirectorystructure/Simple/Release/Integration/CommonAssemblyInfo.cs
-samples/defaultdirectorystructure/Simple/Release/Integration/Site-SimpleFrontEnd/0.0.0.0version.htm
-samples/defaultdirectorystructure/Simple/Release/Integration/Site-SimpleFrontEnd/0.0.0.0web.html
-samples/defaultdirectorystructure/Simple/Release/Integration/Site-SimpleFrontEnd/buildVersion.js
-samples/defaultdirectorystructure/Simple/Release/Integration/Site-SimpleFrontEnd/version.htm
-samples/defaultdirectorystructure/Simple/Release/Integration/Site-SimpleFrontEnd/web.html
 samples/defaultdirectorystructure/Simple/Release/Solution/Site-SimpleFrontEnd/web.html
 spec/adhoc.rb
 spec/build_tasks_spec.rb
