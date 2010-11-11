@@ -65,11 +65,32 @@ CIMaestro has the following major features:
 
 == DEVELOPERS:
 
-After checking out the source (git@github.com:jhosm/cimaestro.git), run:
+After cloning the git repo (git@github.com:jhosm/cimaestro.git) to your file system, run:
 
-  $ If you're on Windows, make sure you've installed DevKit.
-  $ ruby ./helpers/installbundledgems.rb i, on the project's home directory
-  $ rake verify_rcov, and all the tests should pass
+WINDOWS
+
+  $ Install Ruby with RubyInstaller for Windows.
+  $ In order to build gem's native extensions:
+        Install DevKit, available on the the RubyInstaller site.
+
+UBUNTU
+
+  $ Install Ruby Version Manager
+  $ In order to be able to install gems:
+        rvm package install zlib. If it gives an error, follow the steps depicted in the solution section at https://gist.github.com/469647.
+  $ In order to be able to build cimaestro with rake:
+        rvm package install openssl
+  $ rvm install 1.8.7 --with-openssl-dir=$HOME/.rvm/usr
+  $ rvm gemset create cimaestro
+  $ rvm gemset use cimaestro
+  $ gem install bundler
+  $ cd to cimaestro directory
+  $ bundle install --local.
+
+ALL
+
+After the previous platform-specific steps do:
+  $ bundle exec rake verify_rcov, and all the tests should pass
 
 To create a new cimaestro gem:
   $ Make sure Manifest.txt contains all the files to be contained in the gem
