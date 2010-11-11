@@ -74,7 +74,7 @@ class SystemFileStructureMocker
 
   def create(base_dir)
     verbose(false) do
-      mkpath base_dir unless File.exist? base_dir
+      mkpath File.expand_path(base_dir) unless File.exist? base_dir
       @projects.each do |project_name|
         mkdir File.join(base_dir, project_name) unless File.exist? File.join(base_dir, project_name)
       end

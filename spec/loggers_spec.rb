@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe NAntCompatibleXmlLogger do
   before(:each) do
-    @build_spec = BuildSpec.new('../../../..', "Dummy_cimaestro", "Release", "4.5.8.7")
+    @build_spec = BuildSpec.new(TESTS_BASE_PATH, "Dummy_cimaestro", "Release", "4.5.8.7")
     @log = NAntCompatibleXmlLogger.new "Mr Build", File.join(@build_spec.logs_dir_path, "build-results.xml")
   end
 
@@ -31,11 +31,11 @@ describe NAntCompatibleXmlLogger do
 
   it "should split a message with new lines into several messages, one for each line" do
     @log.set_current_task("my_task")
-    @log.log_msg("Aqui estou eu\nAqui está nova linha")
+    @log.log_msg("Aqui estou eu\nAqui estï¿½ nova linha")
     message_xpath = "//task[@name='my_task']/message[@level='Info']"
     @log.current_log.elements.to_a(message_xpath).length.should == 2
     @log.current_log.elements.to_a(message_xpath)[0].text.should == "Aqui estou eu"
-    @log.current_log.elements.to_a(message_xpath)[1].text.should == "Aqui está nova linha"
+    @log.current_log.elements.to_a(message_xpath)[1].text.should == "Aqui estï¿½ nova linha"
   end
 
   it "should fail if it tries to add a message without a current task" do

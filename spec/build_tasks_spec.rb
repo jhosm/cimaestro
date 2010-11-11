@@ -1,7 +1,5 @@
 require "spec_helper"
 
-include Build
-
 describe ExecutionTimeTask do
 
   class SleepTask < Task

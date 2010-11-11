@@ -1,5 +1,3 @@
-$stderr =  StringIO.new
-
 $:.unshift "../lib"
 require "spec"
 require "uuid"
@@ -11,7 +9,7 @@ TESTS_SOURCE_FILES = "./spec/TestSourceFiles"
 TESTS_BASE_PATH = "./spec/Tests"
 rm_rf TESTS_BASE_PATH
 
-
+include Build
 
 class String
   def camelize(first_letter_in_uppercase = true)

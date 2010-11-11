@@ -1,6 +1,5 @@
 require "spec_helper"
 
-
 describe GetSourcesTask do
 
   class NullSourceControl
@@ -22,7 +21,6 @@ describe GetSourcesTask do
   end
 
   it "should checkout" do
-
     build_spec =  NullSourceControlBuildSpec.new
     task = GetSourcesTask.new :sym, build_spec, nil
     task.execute
