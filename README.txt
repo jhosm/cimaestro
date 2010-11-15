@@ -75,17 +75,21 @@ WINDOWS
 
 UBUNTU
 
-  $ Install Ruby Version Manager
-  $ In order to be able to install gems:
-        rvm package install zlib. If it gives an error, follow the steps depicted in the solution section at https://gist.github.com/469647.
-  $ In order to be able to build cimaestro with rake:
+  1.  Install Ruby Version Manager
+  2.  In order to be able to build cimaestro with rake:
         rvm package install openssl
-  $ rvm install 1.8.7 --with-openssl-dir=$HOME/.rvm/usr
-  $ rvm gemset create cimaestro
-  $ rvm gemset use cimaestro
-  $ gem install bundler
-  $ cd to cimaestro directory
-  $ bundle install --local --binstubs [GEM_HOME]/bin. to know GEM_HOME value, type rvm info.
+  3.   If it throws an error:
+        Probably you don't have zlib1g-dev installed. In Ubuntu, use sudo apt-get install zlib1g-dev.
+  4.  In order to be able to install gems (Don't worry if it throws an error):
+        rvm package install zlib.
+  5.  rvm install 1.8.7 --with-openssl-dir=$HOME/.rvm/usr
+  6.  rvm use 1.8.7
+  7.  If step 4 throwed and error, follow the steps depicted in the solution section at https://gist.github.com/469647.
+  6.  rvm gemset create cimaestro
+  7.  rvm gemset use cimaestro
+  8.  gem install bundler
+  9.  cd to cimaestro directory
+  10. bundle install --local --binstubs [GEM_HOME]/bin. to know GEM_HOME value, type rvm info.
 
 ALL
 
