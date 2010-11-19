@@ -144,6 +144,17 @@ module CIMaestro
         end
         @source_control.merge!(other_conf.source_control, options) if other_conf.source_control
       end
+
+       def to_json(*a)
+    {
+      'json_class'   => self.class.name,
+      'data'         => [ ]
+    }.to_json(*a)
+  end
+
+      def self.json_create(o)
+        new()
+      end
     end
   end
 end

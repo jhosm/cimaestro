@@ -6,7 +6,7 @@ GEM
     hoe (2.6.1)
       rake (>= 0.8.7)
       rubyforge (>= 2.0.4)
-    json_pure (1.4.3)
+    json_pure (1.4.6)
     linecache (0.43)
     macaddr (1.0.0)
     rake (0.8.7)
