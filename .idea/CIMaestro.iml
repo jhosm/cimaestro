@@ -27,6 +27,12 @@
     </requirement>
     <requirement>
       <requirement>
+        <dependency name="log4r" version="0" bound="GREATER_OR_EQUAL" git="false" />
+      </requirement>
+      <source manual="true" />
+    </requirement>
+    <requirement>
+      <requirement>
         <dependency name="rake" version="0.8" bound="LATEST_IN_BRANCH" git="false" />
       </requirement>
       <source from="Gemfile" />
@@ -54,66 +60,6 @@
         <dependency name="ruby-debug-ide" version="0.4.9" bound="GREATER_OR_EQUAL" git="false" />
       </requirement>
       <source from="Gemfile" />
-    </requirement>
-    <requirement>
-      <requirement>
-        <dependency name="ruby_parser" version="0" bound="GREATER_OR_EQUAL" git="false" />
-      </requirement>
-      <source manual="true" />
-    </requirement>
-    <requirement>
-      <requirement>
-        <dependency name="rufus-cloche" version="0" bound="GREATER_OR_EQUAL" git="false" />
-      </requirement>
-      <source manual="true" />
-    </requirement>
-    <requirement>
-      <requirement>
-        <dependency name="rufus-dollar" version="0" bound="GREATER_OR_EQUAL" git="false" />
-      </requirement>
-      <source manual="true" />
-    </requirement>
-    <requirement>
-      <requirement>
-        <dependency name="rufus-json" version="0" bound="GREATER_OR_EQUAL" git="false" />
-      </requirement>
-      <source manual="true" />
-    </requirement>
-    <requirement>
-      <requirement>
-        <dependency name="rufus-mnemo" version="0" bound="GREATER_OR_EQUAL" git="false" />
-      </requirement>
-      <source manual="true" />
-    </requirement>
-    <requirement>
-      <requirement>
-        <dependency name="rufus-scheduler" version="0" bound="GREATER_OR_EQUAL" git="false" />
-      </requirement>
-      <source manual="true" />
-    </requirement>
-    <requirement>
-      <requirement>
-        <dependency name="rufus-treechecker" version="0" bound="GREATER_OR_EQUAL" git="false" />
-      </requirement>
-      <source manual="true" />
-    </requirement>
-    <requirement>
-      <requirement>
-        <dependency name="ruote" version="0" bound="GREATER_OR_EQUAL" git="false" />
-      </requirement>
-      <source manual="true" />
-    </requirement>
-    <requirement>
-      <requirement>
-        <dependency name="sexp_processor" version="0" bound="GREATER_OR_EQUAL" git="false" />
-      </requirement>
-      <source manual="true" />
-    </requirement>
-    <requirement>
-      <requirement>
-        <dependency name="tzinfo" version="0" bound="GREATER_OR_EQUAL" git="false" />
-      </requirement>
-      <source manual="true" />
     </requirement>
     <requirement>
       <requirement>
@@ -157,6 +103,7 @@
     <orderEntry type="library" scope="PROVIDED" name="[gem] sexp_processor (v3.0.5, C:/Ruby187/lib/ruby/gems/1.8/gems/sexp_processor-3.0.5)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] tzinfo (v0.3.23, C:/Ruby187/lib/ruby/gems/1.8/gems/tzinfo-0.3.23)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] json_pure (v1.4.6, C:/Ruby187/lib/ruby/gems/1.8/gems/json_pure-1.4.6)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] log4r (v1.1.9, C:/Ruby187/lib/ruby/gems/1.8/gems/log4r-1.1.9)" level="application" />
   </component>
   <component name="RModuleSettingsStorage" number="2" string0="$MODULE_DIR$/spec" string1="$MODULE_DIR$/lib" />
 </module>

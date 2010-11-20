@@ -13,6 +13,10 @@ Notas:
 require 'rubygems'
 require 'ruote'
 require 'ruote/storage/fs_storage'
+require 'log4r'
+
+log = Log4r::Logger.new("simple")        # create a logger
+log.add( Log4r::StdoutOutputter.new('stdout', :formatter=>Log4r::PatternFormatter.new( :pattern => "%m")))
 
 # preparing the engine
 
@@ -31,7 +35,7 @@ end
 
 #participante por omissão
 engine.register_participant /.*/ do |workitem|
-  puts "I received a message #{workitem.participant_name}"
+   Log4r::Logger['simple'].debug "I received a message #{workitem.participant_name}"
 end
 
 # O processo de build do CIMaestro
