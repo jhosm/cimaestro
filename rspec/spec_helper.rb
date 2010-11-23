@@ -1,12 +1,13 @@
 $:.unshift "../lib"
-require "spec"
+require "rspec/system_file_structure_mocker"     
+require "rspec"
 require "uuid"
 require "required_references"
 require "cimaestro"
-require "system_file_structure_mocker"
 
-TESTS_SOURCE_FILES = "./spec/TestSourceFiles"
-TESTS_BASE_PATH = "./spec/Tests"
+
+TESTS_SOURCE_FILES = "./rspec/TestSourceFiles"
+TESTS_BASE_PATH = "./rspec/Tests"
 rm_rf TESTS_BASE_PATH
 
 include Build

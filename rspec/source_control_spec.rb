@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rspec/spec_helper"
 
 describe CIMaestro::SourceControl::Svn do
   before(:each) do

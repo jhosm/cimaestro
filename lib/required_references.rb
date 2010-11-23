@@ -7,7 +7,7 @@ end
 
 require 'rake'
 require 'uuid'
-require 'win32ole'
+#require 'win32ole'
 require 'rake/tasklib'
 require 'rexml/document'
 require 'forwardable'
