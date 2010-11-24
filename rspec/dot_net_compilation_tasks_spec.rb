@@ -51,7 +51,7 @@ describe SetCommonAssemblyAttributesTask do
   before(:each) do
     @build_spec = BuildSpec.new(TESTS_BASE_PATH, "Dummy_cimaestro", "Release", "4.5.6.7")
     @common_attr_task = SetCommonAssemblyAttributesTask.new :common_attributes, @build_spec, NullLogger.new
-    SystemFileStructureMocker.create_working_dir_with_projects(@build_spec, ProjectType::ASSEMBLY + "-Sample")
+    SystemFileStructureMocker.create_working_dir_with_projects(@build_spec, [ProjectType::ASSEMBLY + "-Sample"])
     @common_attr_task.setup
   end
 

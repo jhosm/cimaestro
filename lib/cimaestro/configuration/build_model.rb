@@ -168,7 +168,7 @@ module CIMaestro
 
       def get_projects_of(project_types)
         ArgValidation.check_empty_string(project_types, :project_types) if project_types === String
-        project_types = project_types.to_a
+        project_types = Array(project_types)  #.lines.to_a
 
         project_types.inject([]) do |result, project_type|
           projects = FileList[File.join(working_dir_path, project_type + "*")].map do |path|

@@ -11,14 +11,15 @@ require 'rcov'
 
 
 
+
 #Hoe.spec 'cimaestro' do
 #  developer('CIMaestro', 'cimaestro@googlegroups.com')
 #end
 
 $:.unshift "lib"
-$:.unshift "spec"
+$:.unshift "rspec"
 
-require 'lib/required_references'
+require 'required_references'
 
 namespace :cimaestro do
   desc "do a full build"
@@ -43,8 +44,8 @@ namespace :cimaestro do
     t.rspec_opts = ['--colour', '--format', 'progress']
     t.rcov = true
     t.rcov_path = 'rcov'
-    t.rcov_opts = ['--exclude', "features,kernel,load-diff-lcs\.rb,instance_exec\.rb,^spec/*,bin/spec,examples,/gems,/Library/Ruby,#{ENV['GEM_HOME']},JetBrains"]
-    t.rcov_opts << '--sort coverage --text-summary --aggregate coverage.data --failure-threshold 78'
+    t.rcov_opts = ['--exclude', "features,kernel,load-diff-lcs\.rb,instance_exec\.rb,^spec/*,bin/spec,examples,/gems,/Library/Ruby,/System/Library/,/Applications/RubyMine,^.rvm/rubies*,#{ENV['GEM_HOME']},JetBrains"]
+    t.rcov_opts << '--sort coverage --text-summary --aggregate coverage.data --failure-threshold 60'
 
   end
 

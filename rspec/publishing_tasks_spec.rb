@@ -34,7 +34,7 @@ describe PublishTask do
 
     File.stub!(:exist?).and_return(true)
     FileUtils.stub!(:rm_r)
-    #Quando for verificar se o binário do projecto existe, vou dizer que não.
+    #Quando for verificar se o binario do projecto existe, vou dizer que nao.
     File.should_receive(:exist?).
             with(File.join(@build_spec.working_dir_path, project_with_missing_sources, "bin", @build_spec.solution_build_config)).
             and_return(false)

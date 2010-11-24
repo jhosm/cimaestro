@@ -9,7 +9,7 @@ describe MinifyJavascriptTask do
 
   it "should build the correct command line" do
     @project_name = ProjectType::SITE + "-Sample"
-    SystemFileStructureMocker.create_working_dir_with_projects(@build_spec, @project_name).
+    SystemFileStructureMocker.create_working_dir_with_projects(@build_spec, [@project_name]).
             add_path_to_working_dir(File.join(@project_name, "GeneratedJS")).
             add_file_to_project_in_working_dir(File.join(@project_name, "GeneratedJS"), "jscript1.js").
             add_file_to_project_in_working_dir(File.join(@project_name, "GeneratedJS"), "jscript2.js")
@@ -24,7 +24,7 @@ describe MinifyJavascriptTask do
 
   it "should not include files not present in GeneratedJS folders" do
     @project_name = ProjectType::SITE + "-Sample"
-    SystemFileStructureMocker.create_working_dir_with_projects(@build_spec, @project_name).
+    SystemFileStructureMocker.create_working_dir_with_projects(@build_spec, [@project_name]).
             add_path_to_working_dir(@project_name).
             add_file_to_project_in_working_dir(@project_name, "jscript1.js")
 
@@ -41,7 +41,7 @@ describe MakeVersionedFileNamesTask do
     @replace_xsl = MakeVersionedFileNamesTask.new :make_versioned_xsl_file_names, @build_spec, NullLogger.new
 
     @project_name = ProjectType::SITE + "-Sample"
-    SystemFileStructureMocker.create_working_dir_with_projects(@build_spec, @project_name).
+    SystemFileStructureMocker.create_working_dir_with_projects(@build_spec, [@project_name]).
             add_file_to_project_in_working_dir(@project_name, "teste.xsl")
   end
 
@@ -67,7 +67,7 @@ describe ReplaceCssReferencesTask do
     @replace_css = ReplaceCssReferencesTask.new :make_versioned_css_file_names, @build_spec, NullLogger.new
 
     project_name = ProjectType::SITE + "-A_Site"
-    SystemFileStructureMocker.create_working_dir_with_projects(@build_spec, project_name).
+    SystemFileStructureMocker.create_working_dir_with_projects(@build_spec, [project_name]).
             add_file_to_project_in_working_dir(project_name, "cssfile.css").
             add_file_to_project_in_working_dir(project_name, "cssfile2.css").
             add_file_to_project_in_working_dir(project_name, "htmfile.htm", "<link src=\"cssfile.css\" rel=\"stylesheet\"/><link src=\"cssfile2.css\" rel=\"stylesheet\"/>")

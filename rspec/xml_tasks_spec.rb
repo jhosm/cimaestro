@@ -8,7 +8,7 @@ describe MergeXslFilesTask do
 
   it "should find all specified xsl files to merge" do
     rm_rf @build_spec.working_dir_path
-    fsmock = SystemFileStructureMocker.create_working_dir_with_projects(@build_spec, ProjectType::SITE)
+    fsmock = SystemFileStructureMocker.create_working_dir_with_projects(@build_spec, [ProjectType::SITE])
     project_name = fsmock.projects[0]
     fsmock.add_file_to_project_in_working_dir(project_name, "xpto.xsl")
 
@@ -17,7 +17,7 @@ describe MergeXslFilesTask do
   end
 
   it "should find only the files in buildspec.custom_specs_for(:merge_xsl)[:xsl_files], if specified" do
-    fsmock = SystemFileStructureMocker.create_working_dir_with_projects(@build_spec, ProjectType::SITE)
+    fsmock = SystemFileStructureMocker.create_working_dir_with_projects(@build_spec, [ProjectType::SITE])
     project_name = fsmock.projects[0]
     fsmock.add_file_to_project_in_working_dir(project_name, "xpto.xsl").
       add_file_to_project_in_working_dir(project_name, "xpto2.xsl")
@@ -28,7 +28,7 @@ describe MergeXslFilesTask do
   end
 
   it "should not change the xsl file if there are no xsl files to include" do
-    fsmock = SystemFileStructureMocker.create_working_dir_with_projects(@build_spec, ProjectType::SITE)
+    fsmock = SystemFileStructureMocker.create_working_dir_with_projects(@build_spec, [ProjectType::SITE])
     project_name = fsmock.projects[0]
     fsmock.add_file_to_project_in_working_dir(project_name, "xpto.xsl", "<xpto>teste</xpto>")
 
@@ -39,7 +39,7 @@ describe MergeXslFilesTask do
   end
 
   it "should merge the inner xsl file, which itself has no includes" do
-    fsmock = SystemFileStructureMocker.create_working_dir_with_projects(@build_spec, ProjectType::SITE)
+    fsmock = SystemFileStructureMocker.create_working_dir_with_projects(@build_spec, [ProjectType::SITE])
     project_name = fsmock.projects[0]
     fsmock.add_file_to_project_in_working_dir(project_name, "xpto.xsl", '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:include href="xpto2.xsl"/></xsl:stylesheet>').
       add_file_to_project_in_working_dir(project_name, "xpto2.xsl", "<xpto>teste</xpto>")
@@ -53,7 +53,7 @@ describe MergeXslFilesTask do
   end
 
   it "should merge the inner xsl file, which itself has includes" do
-    fsmock = SystemFileStructureMocker.create_working_dir_with_projects(@build_spec, ProjectType::SITE)
+    fsmock = SystemFileStructureMocker.create_working_dir_with_projects(@build_spec, [ProjectType::SITE])
        project_name = fsmock.projects[0]
        fsmock.add_file_to_project_in_working_dir(project_name, "xpto.xsl", '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:include href="xpto2.xsl"/></xsl:stylesheet>').
                add_file_to_project_in_working_dir(project_name, "xpto2.xsl", '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:include href="xpto3.xsl"/><xpto2>teste</xpto2></xsl:stylesheet>').
@@ -78,7 +78,7 @@ describe ValidateAndMinimizeXmlFilesTask do
   it "should find all files and all should be well formed" do
     project_name = ProjectType::WINDOWS_SERVICE + "-ValidateAndMinimizeXmlFilesTask"
     rm_rf @build_spec.working_dir_path
-    SystemFileStructureMocker.create_working_dir_with_projects(@build_spec, project_name).
+    SystemFileStructureMocker.create_working_dir_with_projects(@build_spec, [project_name]).
             add_file_to_project_in_working_dir(project_name, "test.xml", "<xml> </xml>")
     @validate_xml.setup
     @validate_xml.xml_files.length.should == 1
@@ -96,7 +96,7 @@ describe ValidateAndMinimizeXmlFilesTask do
 
   it "should minimize the files, by stripping all characters between tags" do
     project_name = ProjectType::WINDOWS_SERVICE + "-Sample"
-    SystemFileStructureMocker.create_working_dir_with_projects(@build_spec, project_name).
+    SystemFileStructureMocker.create_working_dir_with_projects(@build_spec, [project_name]).
             add_file_to_project_in_working_dir(project_name, "xml-bem-formado.xml", "<teste> <ola/></teste>")
 
     @validate_xml.setup

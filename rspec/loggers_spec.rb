@@ -31,11 +31,11 @@ describe NAntCompatibleXmlLogger do
 
   it "should split a message with new lines into several messages, one for each line" do
     @log.set_current_task("my_task")
-    @log.log_msg("Aqui estou eu\nAqui est� nova linha")
+    @log.log_msg("Aqui estou eu\nAqui esta nova linha")
     message_xpath = "//task[@name='my_task']/message[@level='Info']"
     @log.current_log.elements.to_a(message_xpath).length.should == 2
     @log.current_log.elements.to_a(message_xpath)[0].text.should == "Aqui estou eu"
-    @log.current_log.elements.to_a(message_xpath)[1].text.should == "Aqui est� nova linha"
+    @log.current_log.elements.to_a(message_xpath)[1].text.should == "Aqui esta nova linha"
   end
 
   it "should fail if it tries to add a message without a current task" do

@@ -1,3 +1,4 @@
+$:.unshift "."
 require "rspec/spec_helper"
 
 describe ExecutionTimeTask do

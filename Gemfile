@@ -14,8 +14,9 @@ gem "diff-lcs", "~>1.1", :group => [:test]
 
 gem "hoe", "~>2.6", :group => [:development]
 gem "rcov", "~>0.9", :group => [:development]
-gem "ruby-debug-ide", ">=0.4.9", :group => [:development]
-gem "ruby-debug-base", ">=0.10.3", :group => [:development]
-gem "linecache", ">=0.43", :group => [:development]
+gem "ruby-debug19", ">=0.11.6", :group => [:development]
+gem "ruby-debug-ide19", ">=0.4.12", :group => [:development]
+gem "ruby-debug-base19", ">=0.11.24", :group => [:development]
+gem "linecache19", ">=0.5", :group => [:development]
 
 # vim: syntax=ruby
