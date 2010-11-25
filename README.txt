@@ -69,9 +69,12 @@ After cloning the git repo (git@github.com:jhosm/cimaestro.git) to your file sys
 
 WINDOWS
 
-  $ Install Ruby with RubyInstaller for Windows.
-  $ In order to build gem's native extensions:
+  1. Install Ruby with RubyInstaller for Windows.
+  2. In order to build gem's native extensions:
         Install DevKit, available on the the RubyInstaller site.
+  3. gem install rake
+  4. gem install bundler
+  5. bundle install 
 
 UBUNTU
 
@@ -94,7 +97,7 @@ UBUNTU
 ALL
 
 After the previous platform-specific steps do:
-  $ bundle exec rake verify_rcov, and all the tests should pass
+  $ rake cimaestro:default (all the tests should pass)
 
 To create a new cimaestro gem:
   $ Make sure Manifest.txt contains all the files to be contained in the gem
