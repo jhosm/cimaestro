@@ -1,5 +1,4 @@
 require "rexml/document"
-include REXML
 
 class NullLogger
   def set_current_task(task_name)
@@ -36,6 +35,7 @@ class ConsoleLogger
 end
 
 class NAntCompatibleXmlLogger
+  include REXML
   def initialize(system_name, log_path)
     @log_path = log_path
     FileUtils.mkpath(File.dirname(@log_path)) unless File.exist?(File.dirname(@log_path))

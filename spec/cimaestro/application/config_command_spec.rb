@@ -28,7 +28,7 @@ module CIMaestro
       it "should set the source control system" do
         ConfigCommand.new.run(['--sc_type', 'CIMaestro::SourceControl::Svn'])
         config = BuildConfig.load()
-        config.source_control.system.should == CIMaestro::SourceControl::Svn
+        config.source_control.system_proxy.should == CIMaestro::SourceControl::Svn
       end
     end
   end

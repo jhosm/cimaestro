@@ -23,6 +23,8 @@ lib/cimaestro/configuration/serializer.rb
 lib/cimaestro/configuration/source_control.rb
 lib/cimaestro/configuration/system_directory_structure_config.rb
 lib/cimaestro/ruby_extensions/class/yaml.rb
+lib/cimaestro/ruby_extensions/class/json.rb
+lib/cimaestro/ruby_extensions/open_struct/json.rb
 lib/cimaestro/ruby_extensions/string/reflection.rb
 lib/cimaestro/source_control/file_system.rb
 lib/cimaestro/source_control/source_control_factory.rb
@@ -57,6 +59,8 @@ spec/cimaestro/configuration/build_config_spec.rb
 spec/cimaestro/configuration/build_model_spec.rb
 spec/cimaestro/configuration/default_directory_structure_spec.rb
 spec/cimaestro/ruby_extensions/class/yaml_spec.rb
+spec/cimaestro/ruby_extensions/class/json_spec.rb
+spec/cimaestro/ruby_extensions/open_struct/json_spec.rb
 spec/cimaestro/ruby_extensions/string/reflection_spec.rb
 spec/cimaestro/source_control/file_system_spec.rb
 spec/clean_tasks_spec.rb
@@ -94,3 +98,4 @@ vendor/cache/ruby-debug-base-0.10.3.gem
 vendor/cache/ruby-debug-ide-0.4.9.gem
 vendor/cache/rubyforge-2.0.4.gem
 vendor/cache/uuid-2.3.1.gem
+vendor/cache/rufus-json-0.2.5.gem

@@ -89,7 +89,7 @@ describe CreateStrongNamedAssemblyPolicyTask do
     FileList.stub!(:new).and_return([File.join(@build_spec.working_dir_path, "GAC-MyStrongNamedAssembly")])
     @task.setup
     @task.xml_policy_files.size.should == 1
-    assembly = Document.new(@task.xml_policy_files[@task.xml_policy_files.keys()[0]]).elements.to_a("/configuration/runtime/assemblyBinding/dependentAssembly")
+    assembly = REXML::Document.new(@task.xml_policy_files[@task.xml_policy_files.keys()[0]]).elements.to_a("/configuration/runtime/assemblyBinding/dependentAssembly")
     assembly.length.should == 1
     assembly_identity = assembly[0].get_elements("assemblyIdentity")
     assembly_identity.length.should == 1
@@ -107,7 +107,7 @@ describe CreateStrongNamedAssemblyPolicyTask do
     @task.setup
     @task.xml_policy_files.size.should == 2
     @task.xml_policy_files.each_pair do |project, policy_file|
-      assembly = Document.new(policy_file).elements.to_a("/configuration/runtime/assemblyBinding/dependentAssembly")
+      assembly = REXML::Document.new(policy_file).elements.to_a("/configuration/runtime/assemblyBinding/dependentAssembly")
       assembly_identity = assembly[0].get_elements("assemblyIdentity")
       assembly_identity[0].attribute("name").value.should == project.name
     end

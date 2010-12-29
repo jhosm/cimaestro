@@ -47,7 +47,7 @@ describe MergeXslFilesTask do
     @merge_xsl.setup
     @merge_xsl.execute
 
-    merged_xsl = Document.new File.read(File.join(@build_spec.working_dir_path, project_name, "xpto.xsl"))
+    merged_xsl = REXML::Document.new File.read(File.join(@build_spec.working_dir_path, project_name, "xpto.xsl"))
     merged_xsl.root.elements.to_a("/stylesheet/include").should == []
     merged_xsl.root.elements.to_a("/stylesheet/xpto").should_not == nil
   end
@@ -62,7 +62,7 @@ describe MergeXslFilesTask do
     @merge_xsl.setup
     @merge_xsl.execute
 
-    outermost_xsl = Document.new File.read(File.join(@build_spec.working_dir_path, project_name, "xpto.xsl"))
+    outermost_xsl = REXML::Document.new File.read(File.join(@build_spec.working_dir_path, project_name, "xpto.xsl"))
     outermost_xsl.root.elements.to_a("/stylesheet/include").should == []
     outermost_xsl.root.elements.to_a("/stylesheet/xpto3").should_not == nil
     outermost_xsl.root.elements.to_a("/stylesheet/xpto2").should_not == nil

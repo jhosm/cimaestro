@@ -2,11 +2,14 @@ require 'active_support/core_ext/object/blank'
 require 'cimaestro/configuration/serializer'
 require 'cimaestro/configuration/path_builder'
 require 'cimaestro/configuration/system_directory_structure_config'
+require 'cimaestro/utils/reflection'
 
 module CIMaestro
   module Configuration
     class BuildConfig
       include PathBuilder
+      include Utils::Reflection
+
 
       class << self
         include PathBuilder
@@ -23,7 +26,7 @@ module CIMaestro
         def load(system_name = "", codeline_name = "", base_path = "")
           saved_config = load_saved_config(base_path, codeline_name, system_name)
 
-          config = BuildConfig.new(system_name, codeline_name, base_path)
+          config       = BuildConfig.new(system_name, codeline_name, base_path)
           config = saved_config[0] if saved_config != nil
 
           dir_structure = SystemDirectoryStructureConfig.new(config).get_directory_structure()
@@ -44,16 +47,19 @@ module CIMaestro
       attr_reader :source_control, :system_name, :codeline_name, :base_path
 
       def initialize(system_name = "", codeline_name = "", base_path = "")
-        @source_control = SourceControl.new
-        @system_name = system_name
-        @codeline_name = codeline_name
-        @base_path = base_path
+        @source_control      = SourceControl.new
+        @system_name         = system_name
+        @codeline_name       = codeline_name
+        @base_path           = base_path
+        @task_name           = nil
+        @trigger_type        = nil
+        @directory_structure = nil
       end
 
       def save()
         config_path = get_config_path(self)
-        serializer = Serializer.new(config_path)
-        config = serializer.deserialize()
+        serializer  = Serializer.new(config_path)
+        config      = serializer.deserialize()
         if config != nil then
           config[0] = self
         else
@@ -66,10 +72,10 @@ module CIMaestro
 
       def set_default_repository_path
         if not @system_name.blank? and
-                not @codeline_name.blank? and
-                not @base_path.blank? and
-                @source_control.is_using_default_type? and
-                not @source_control.has_repository_path? then
+            not @codeline_name.blank? and
+            not @base_path.blank? and
+            @source_control.is_using_default_system_proxy? and
+            not @source_control.has_repository_path? then
           @source_control.repository_path = create_directory_structure.solution_dir_path
         end
       end
@@ -135,26 +141,31 @@ module CIMaestro
 
         default_config = BuildConfig.new()
 
-        [:system_name, :codeline_name, :version_number, :trigger_type, :task_name, :base_path, :directory_structure].each do |item|
-          if (other_conf.respond_to?(item) and
-              (options[:override] or instance_variable_get("@#{item}").blank? or instance_variable_get("@#{item}") == default_config.instance_variable_get("@#{item}")))
-
-            self.send(item.to_s + "=", other_conf.send(item)) 
+        instance_variables_as_hash().each_pair do |attr_reader, value|
+          if (other_conf.respond_to?(attr_reader))
+            if value.respond_to?(:merge!)
+              value.merge!(other_conf.send(attr_reader), options)
+            elsif (options[:override] or
+                value == default_config.send(attr_reader) or
+                value.blank?)
+              self.send(attr_reader.to_s + "=", other_conf.send(attr_reader))
+            end
           end
         end
-        @source_control.merge!(other_conf.source_control, options) if other_conf.source_control
       end
 
-       def to_json(*a)
-    {
-      'json_class'   => self.class.name,
-      'data'         => [ ]
-    }.to_json(*a)
-  end
+      def to_ostruct()
 
-      def self.json_create(o)
-        new()
+        instance_variables_as_hash().inject(OpenStruct.new) do |result, (property, value)|
+          if value.respond_to?(:to_ostruct) then
+            result.send(property.to_s + "=", value.to_ostruct())
+          else
+            result.send(property.to_s + "=", self.send(property))
+          end
+          result
+        end
       end
+
     end
   end
 end

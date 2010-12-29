@@ -27,7 +27,7 @@ describe AnalyzeCodeTask do
 
     @task.execute
 
-    report = Document.new File.read(@task.benchmark_report_path)
+    report = REXML::Document.new File.read(@task.benchmark_report_path)
     report.root.attributes["buildVersion"].should == BuildVersion.new(@build_spec.version).to_s
   end
 
@@ -61,14 +61,14 @@ describe AnalyzeCodeTask do
   it "should update the benchmark report when the analysis passes and the version has increased" do
     @build_spec.version_number = "1.6.0.0"
     @task.execute
-    report = Document.new File.read(@task.benchmark_report_path)
+    report = REXML::Document.new File.read(@task.benchmark_report_path)
     report.root.attributes["buildVersion"].should == "1.6.0.0"
   end
 
   it "should not update the benchmark report when the analysis passes and only the version revision has changed" do
     @build_spec.version_number = "1.5.8.9"
     @task.execute
-    report = Document.new File.read(@task.benchmark_report_path)
+    report = REXML::Document.new File.read(@task.benchmark_report_path)
     report.root.attributes["buildVersion"].should == "1.5.8.7"
   end
 end

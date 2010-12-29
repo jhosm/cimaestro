@@ -11,7 +11,7 @@ module CIMaestro
 
         conf.directory_structure.should == DefaultDirectoryStructure
         conf.base_path.should == ""
-        conf.source_control.system.should == SourceControl::FileSystem
+        conf.source_control.system_proxy.should == SourceControl::FileSystem
         conf.task_name.should == :default
         conf.trigger_type.should == :forced
         conf.version_number.to_s == "0.0.0.0"
@@ -70,6 +70,24 @@ module CIMaestro
 
         loaded_conf = BuildConfig.load("aSystem", "Mainline", TESTS_BASE_PATH)
         loaded_conf.source_control.repository_path.should == '\\yabadabadoo'
+      end
+
+      #I don't know the best way to test this. How to make sure that all the relevant values are copied to
+      #to the struct, including values that are themselves a result of a call to to_ostruct, when:
+      #  * resorting to implement the same algorithm that is used at to_ostruct, which is a duplication and makes a hard test to read
+      #  * I want to avoid explicitly testing for each value, as I would have to update it everytime I add a new value
+      #I went for the easy route and decided that it's reasonable to just test two situations:
+      #  * a first level variable
+      #  * a second level variable
+      it "should be able to convert itself into an OpenStruct" do
+        default_conf = BuildConfig.new
+        default_conf.source_control.repository_path = "" #so it doesn't throw...
+        default_conf_as_ostruct = default_conf.to_ostruct
+
+        default_conf_as_ostruct.kind_of?(OpenStruct).should be_true
+
+        default_conf.trigger_type.should == default_conf_as_ostruct.trigger_type
+        default_conf.source_control.system_proxy.should == default_conf_as_ostruct.source_control.system_proxy
       end
     end
   end

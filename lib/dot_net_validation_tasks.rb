@@ -202,7 +202,7 @@ module Build
 
     def verify_tests_results
       file = File.read(File.join(build_spec.logs_dir_path, "tests-results.xml"))
-      results = Document.new file
+      results = REXML::Document.new file
       return false if results.elements.to_a("//failure").length > 0
       return true
     end

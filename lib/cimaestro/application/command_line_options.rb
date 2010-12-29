@@ -17,7 +17,7 @@ module CIMaestro
                                                                                                    'the directory structure.',
                                                                                                    'Check CIMaestro::Configuration::',
                                                                                                    'DefaultDirectoryStructure docs.'],
-        'source_control!system' => ['--sc_type SOURCE_CONTROL_TYPE', 'The name of the Ruby class which',
+        'source_control!system_proxy' => ['--sc_type SOURCE_CONTROL_TYPE', 'The name of the Ruby class which',
                                                                     ' proxies the source control system'],
         'source_control!repository_path' => ['--sc_path REPOSITORY_PATH', 'The location of the system',
                                                                        ' in the source control''s repository.'],

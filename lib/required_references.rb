@@ -39,7 +39,11 @@ require 'cimaestro/source_control/svn'
 require 'cimaestro/source_control/file_system'
 require 'cimaestro/configuration/default_directory_structure'
 require 'cimaestro/ruby_extensions/class/yaml'
+require 'cimaestro/ruby_extensions/class/json'
+require 'cimaestro/ruby_extensions/class/reflection'
+require 'cimaestro/ruby_extensions/open_struct/json'
 require 'cimaestro/ruby_extensions/string/reflection'
+
 require 'loggers'
 require 'registry'
 

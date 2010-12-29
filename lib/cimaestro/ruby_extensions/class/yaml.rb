@@ -15,7 +15,4 @@ class Class
     end
   end
 
-  def to_class
-    self
-  end
 end

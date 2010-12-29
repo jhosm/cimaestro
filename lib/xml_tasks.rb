@@ -19,7 +19,7 @@ module Build
     def execute
       return if @xsl_files == nil
       @xsl_files.each do | current_xsl_path |
-        xsl_being_merged = Document.new File.read(current_xsl_path), :compress_whitespace => :all
+        xsl_being_merged = REXML::Document.new File.read(current_xsl_path), :compress_whitespace => :all
 
         include_elems = xsl_being_merged.elements.to_a("//xsl:include or //include")
         while include_elems.length >= 1
@@ -57,7 +57,7 @@ module Build
     end
 
     def get_included_elems(include_path)
-      included_xsl = Document.new File.read(include_path)
+      included_xsl = REXML::Document.new File.read(include_path)
       included_xsl.root.elements
     end
 
@@ -90,7 +90,7 @@ module Build
       @xml_files.each do |xml_file|
         begin
           xml_contents = File.read(xml_file)
-          Document.new xml_contents
+          REXML::Document.new xml_contents
           File.open(xml_file, "w") do |file|
             file.write xml_contents.gsub(/>\s+</, "><")
           end

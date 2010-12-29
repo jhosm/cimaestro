@@ -194,7 +194,7 @@ module CIMaestro
       end
 
       def src_control
-        @global_conf.source_control.system.new(working_dir_path,
+        @global_conf.source_control.system_proxy.new(working_dir_path,
                                              @global_conf.source_control.repository_path,
                                              @global_conf.source_control.username,
                                              @global_conf.source_control.password)
@@ -293,8 +293,8 @@ module CIMaestro
       end
 
       def read_reports()
-        @benchmark_report = Document.new File.read(@benchmark_report_path)
-        @report = Document.new File.read(@report_path)
+        @benchmark_report = REXML::Document.new File.read(@benchmark_report_path)
+        @report = REXML::Document.new File.read(@report_path)
       end
 
       def setup
@@ -328,7 +328,7 @@ module CIMaestro
       def update
         if !@benchmark_exists or @build_version > @benchmark_version then
           FileUtils.cp @report_path, @benchmark_report_path
-          report = Document.new File.read(@benchmark_report_path)
+          report = REXML::Document.new File.read(@benchmark_report_path)
           report.root.attributes["buildVersion"] = @build_version.to_s
           File.open(@benchmark_report_path, "w") do |file|
             report.write file
