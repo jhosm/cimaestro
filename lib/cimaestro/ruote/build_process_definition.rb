@@ -1,13 +1,8 @@
 =begin
 
 Notas:
-* rake faz parte do standard
-* ruote tem menos utilizadores, qual o seu futuro? qual a robustez?
-* workitems têm de poder ser serializados em JSON... BuildConfig teria de ser modificado.
-* ruote tem potencial para suportar tudo o que desenvolvermos
-* ruote tem ruote-kit -> interface web de administração e serviço REST
-* ruote - investigar se oferece, de base, uma forma de consultar o histórico dos processos já executados.
-* ruote - 40 horas para converter de rake... 
+* ruote tem ruote-kit -> interface web de administraÃ§Ã£o e serviÃ§o REST
+* ruote - investigar se oferece, de base, uma forma de consultar o histÃ³rico dos processos jÃ¡ executados.
 =end
 
 require 'rubygems'
@@ -25,15 +20,15 @@ engine = Ruote::Engine.new(
                 Ruote::FsStorage.new(
                         'ruote_work')))
 
-# Adicionar logger básico que subscreve as mensagens enviadas pelo ruote.
+# Adicionar logger bÃ¡sico que subscreve as mensagens enviadas pelo ruote.
 engine.add_service('s_cimaestrologger', 'lib/cimaestro/ruote/puts_logger', 'PutsLogger')
 
-# spike para demonstrar como carregar customizações específicas.
+# spike para demonstrar como carregar customizaÃ§Ãµees especÃ­ficas.
 engine.register_participant 'setup_build_specification' do |workitem|
   workitem.fields['custom_spec_wf'] = File.dirname(__FILE__) + "/custom_build_spec.rb" if File.exist?(File.dirname(__FILE__) + "/custom_build_spec.rb")
 end
 
-#participante por omissão
+#participante por omissÃ£o
 engine.register_participant /.*/ do |workitem|
    Log4r::Logger['simple'].debug "I received a message #{workitem.participant_name}"
 end
@@ -51,8 +46,8 @@ pdef = Ruote.process_definition :name => 'test' do
   end
 
 
-  #Sugestão. Definir estes fluxos externamente e registá-los nas engine variables.
-  #Assim podem ser usados noutras definições de fluxos. Ver http://ruote.rubyforge.org/exp/subprocess.html.
+  #Sugestï¿½o. Definir estes fluxos externamente e registï¿½-los nas engine variables.
+  #Assim podem ser usados noutras definiï¿½ï¿½es de fluxos. Ver http://ruote.rubyforge.org/exp/subprocess.html.
   define 'prepare_build_spec' do
     load_config
     setup_build_specification
@@ -89,7 +84,7 @@ pdef = Ruote.process_definition :name => 'test' do
   end
 end
 
-# se quisermos executar outro fluxo, passamos aqui outra definição, guardada na configuração do sistema. Mera sugestão.
+# se quisermos executar outro fluxo, passamos aqui outra definiï¿½ï¿½o, guardada na configuraï¿½ï¿½o do sistema. Mera sugestï¿½o.
 engine.variables["build_process_definition"] = pdef
 
 # launching, creating a process instance
@@ -97,6 +92,3 @@ wfid = engine.launch(engine.variables["build_process_definition"])
 
 engine.wait_for(wfid)
 # blocks current thread until our process instance terminates
-
-
-

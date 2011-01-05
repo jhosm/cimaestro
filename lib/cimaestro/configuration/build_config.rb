@@ -1,5 +1,5 @@
 require 'active_support/core_ext/object/blank'
-require 'cimaestro/configuration/serializer'
+require 'cimaestro/utils/serializer'
 require 'cimaestro/configuration/path_builder'
 require 'cimaestro/configuration/system_directory_structure_config'
 require 'cimaestro/utils/reflection'
