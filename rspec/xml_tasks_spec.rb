@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rspec/spec_helper"
 
 describe MergeXslFilesTask do
   before(:each) do

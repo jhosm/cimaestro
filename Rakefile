@@ -5,11 +5,15 @@ require "bundler"
 Bundler.setup
 
 require 'hoe'
-require 'spec/rake/verify_rcov'
+require 'rspec/core/rake_task'
 
-Hoe.spec 'cimaestro' do
-  developer('CIMaestro', 'cimaestro@googlegroups.com')
-end
+require 'rcov'
+
+
+
+#Hoe.spec 'cimaestro' do
+#  developer('CIMaestro', 'cimaestro@googlegroups.com')
+#end
 
 $:.unshift "lib"
 $:.unshift "spec"
@@ -33,20 +37,25 @@ namespace :cimaestro do
   end
   
   desc "Run all specs with rcov"
-  Spec::Rake::SpecTask.new(:spec_and_rcov) do |t|
-    t.spec_files = FileList['spec/**/*_spec.rb']
-    t.spec_opts = ['--options', 'spec/spec.opts']
+  RSpec::Core::RakeTask.new(:spec_and_rcov) do |t|
+    t.pattern = 'rspec/**/*_spec.rb'
+#    t.rspec_opts = ['--colour', '--format', 'profile', '--timeout', '20', '--diff']
+    t.rspec_opts = ['--colour', '--format', 'progress']
     t.rcov = true
-    t.rcov_dir = 'coverage'
-    t.rcov_opts = ['--exclude', "features,kernel,load-diff-lcs\.rb,instance_exec\.rb,^spec/*,bin/spec,examples,/gems,/Library/Ruby,#{ENV['GEM_HOME']},JetBrains"]
-    t.rcov_opts << '--sort coverage --text-summary --aggregate coverage.data'
+    t.rcov_path = 'rcov'
+    t.rcov_opts = ['--exclude', "features,kernel,load-diff-lcs\.rb,instance_exec\.rb,^spec/*,bin/spec,\.rvm,examples,/gems,/Library/Ruby,#{ENV['GEM_HOME']},JetBrains"]
+    t.rcov_opts << '--sort coverage --text-summary --aggregate coverage.data --failure-threshold 74'
+
   end
 
-
-  RCov::VerifyTask.new(:verify_rcov => 'cimaestro:spec_and_rcov') do |t|
-    t.threshold = 78.42
-    t.index_html = 'coverage/index.html'
+  desc "Verify and run all with rcov"
+  task :verify_rcov => 'spec_and_rcov' do
   end
+
+#  Rcov::RcovTask.new(:verify_rcov => 'cimaestro:spec_and_rcov') do |t|
+#    t.threshold = 78.42
+#    t.index_html = 'coverage/index.html'
+#  end
 
   task 'install' do
     sh 'rake gem'

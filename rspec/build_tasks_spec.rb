@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rspec/spec_helper"
 
 describe ExecutionTimeTask do
 
@@ -19,8 +19,10 @@ describe ExecutionTimeTask do
   end
 
   it "should count time, even if task throws" do
-    task = mock("FailsTask", :null_object => true)
+    task = mock("FailsTask").as_null_object
     task.should_receive(:execute).once.and_raise("erro")
+#    task.stub(:rake_name)
+#    task.stub(:setup)
     @execution_time = ExecutionTimeTask.new task, BuildSpec.new(TESTS_BASE_PATH, "x","x", "1.0.0.0")
     @execution_time.setup
     lambda { @execution_time.execute }.should raise_error
