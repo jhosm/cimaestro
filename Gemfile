@@ -7,6 +7,7 @@ gem "uuid", "~>2.3"
 gem "activesupport", "~>2.3"
 gem "rufus-json", "~>0.2"
 gem "ruote", "~>2.1"
+gem "log4r", "~>1.1"
 
 gem "rspec", "~>2.0", :group => [:test], :require => "spec"
 gem "rspec-core", "~>2.0", :group => [:test], :require => "spec"
