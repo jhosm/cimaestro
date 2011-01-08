@@ -1,35 +1,29 @@
 # -*- ruby -*-
-
 require 'rubygems'
 require "bundler"
 Bundler.setup
 
 require 'hoe'
 require 'rspec/core/rake_task'
-
 require 'rcov'
-
-
 
 #Hoe.spec 'cimaestro' do
 #  developer('CIMaestro', 'cimaestro@googlegroups.com')
 #end
-
 $:.unshift "lib"
 $:.unshift "spec"
-
 require 'lib/required_references'
 
 namespace :cimaestro do
   desc "do a full build"
-  task :default => [:clean_rcov_files, :clean_rspec_files, :verify_rcov]
+  task :default => [:clean_rcov_files, :clean_rspec_files, :spec_and_rcov]
 
   desc "Clean up intermediate files of rcov"
   task :clean_rcov_files => 'spec_and_rcov' do
     rm_rf 'coverage.data'
   end
 
-  desc "Clean up intermediate files of rspec"
+  desc "Clean up intermediate files of spec"
   task :clean_rspec_files => 'spec_and_rcov' do
     rm Dir.glob('*sh_log.txt')
     rm Dir.glob('_config.yaml')
@@ -38,24 +32,14 @@ namespace :cimaestro do
   
   desc "Run all specs with rcov"
   RSpec::Core::RakeTask.new(:spec_and_rcov) do |t|
-    t.pattern = 'rspec/**/*_spec.rb'
-#    t.rspec_opts = ['--colour', '--format', 'profile', '--timeout', '20', '--diff']
+    t.pattern = 'spec/**/*_spec.rb'
     t.rspec_opts = ['--colour', '--format', 'progress']
     t.rcov = true
     t.rcov_path = 'rcov'
-    t.rcov_opts = ['--exclude', "features,kernel,load-diff-lcs\.rb,instance_exec\.rb,^spec/*,bin/spec,\.rvm,examples,/gems,/Library/Ruby,#{ENV['GEM_HOME']},JetBrains"]
-    t.rcov_opts << '--sort coverage --text-summary --aggregate coverage.data --failure-threshold 74'
+    t.rcov_opts = '--exclude features,kernel,load-diff-lcs.rb,instance_exec.rb,^spec/*,bin/spec,.rvm,examples,/gems,/Library/Ruby,JetBrains '
+    t.rcov_opts << '--sort coverage --text-summary --aggregate coverage.data --failure-threshold 78.6'
 
   end
-
-  desc "Verify and run all with rcov"
-  task :verify_rcov => 'spec_and_rcov' do
-  end
-
-#  Rcov::RcovTask.new(:verify_rcov => 'cimaestro:spec_and_rcov') do |t|
-#    t.threshold = 78.42
-#    t.index_html = 'coverage/index.html'
-#  end
 
   task 'install' do
     sh 'rake gem'

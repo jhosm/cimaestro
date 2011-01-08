@@ -46,13 +46,10 @@ pdef = Ruote.process_definition :name => 'test' do
   end
 
 
-  #Sugest�o. Definir estes fluxos externamente e regist�-los nas engine variables.
-  #Assim podem ser usados noutras defini��es de fluxos. Ver http://ruote.rubyforge.org/exp/subprocess.html.
   define 'prepare_build_spec' do
     load_config
     setup_build_specification
     subprocess :ref => '${custom_spec_wf}', :if => '${custom_spec_wf}'
-
   end
 
   define 'build_web_sources' do
@@ -63,7 +60,6 @@ pdef = Ruote.process_definition :name => 'test' do
     minify_javascript
     replace_css_references
     make_versioned_file_names
-
   end
 
   define 'compile_dot_net_sources' do
@@ -84,11 +80,9 @@ pdef = Ruote.process_definition :name => 'test' do
   end
 end
 
-# se quisermos executar outro fluxo, passamos aqui outra defini��o, guardada na configura��o do sistema. Mera sugest�o.
 engine.variables["build_process_definition"] = pdef
 
 # launching, creating a process instance
 wfid = engine.launch(engine.variables["build_process_definition"])
 
 engine.wait_for(wfid)
-# blocks current thread until our process instance terminates
