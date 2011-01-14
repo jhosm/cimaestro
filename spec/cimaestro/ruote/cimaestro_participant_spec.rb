@@ -2,12 +2,7 @@ require 'spec_helper'
 require 'rubygems'
 require 'ruote'
 require 'cimaestro/ruote/ci_maestro_participant'
-
-$pdef = ::Ruote.process_definition :name => 'def0' do
-   throw_error :if => '${f:should_throw_error}'
-   a_sample
-end
-
+require 'cimaestro/ruote/ruote_spec_helper'
 
 class ASampleTask
 
@@ -46,9 +41,15 @@ end
 module CIMaestro
   module Ruote
     describe CIMaestroParticipant do
+      include RuoteSpecHelper
+
       def launch_process(workitem={})
-        workitem.merge!({'build_config' => BuildConfig.new("system", "mainline", 'c:').to_ostruct})
-        wfid = @engine.launch($pdef, workitem)
+        pdef = ::Ruote.process_definition do
+           throw_error :if => '${f:should_throw_error}'
+           a_sample
+        end
+        workitem.merge!(get_required_workitem_for_process_startup())
+        wfid = @engine.launch(pdef, workitem)
         @engine.wait_for(wfid)
         return wfid
       end

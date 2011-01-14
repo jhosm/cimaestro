@@ -26,6 +26,7 @@ lib/cimaestro/ruby_extensions/class/json.rb
 lib/cimaestro/ruby_extensions/open_struct/json.rb
 lib/cimaestro/ruby_extensions/string/reflection.rb
 lib/cimaestro/ruote/ci_maestro_participant.rb
+lib/cimaestro/ruote/process_launcher.rb
 lib/cimaestro/ruote/invalid_participant_name_exception.rb
 lib/cimaestro/source_control/file_system.rb
 lib/cimaestro/source_control/source_control_factory.rb
@@ -66,6 +67,8 @@ spec/cimaestro/ruby_extensions/class/json_spec.rb
 spec/cimaestro/ruby_extensions/open_struct/json_spec.rb
 spec/cimaestro/ruby_extensions/string/reflection_spec.rb
 spec/cimaestro/ruote/cimaestro_participant_spec.rb
+spec/cimaestro/ruote/process_launcher_spec.rb
+spec/cimaestro/ruote/ruote_spec_helper.rb
 spec/cimaestro/source_control/file_system_spec.rb
 spec/clean_tasks_spec.rb
 spec/dot_net_compilation_tasks_spec.rb

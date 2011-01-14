@@ -1,5 +1,5 @@
 $:.unshift "../lib"
-require "spec/system_file_structure_mocker"
+require "system_file_structure_mocker"
 require "rspec"
 require "uuid"
 require "required_references"
