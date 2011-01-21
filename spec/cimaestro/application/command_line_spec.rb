@@ -25,7 +25,7 @@ module CIMaestro
         CommandLine.select_command(["yummy_dummy", "--anoption xpto"]).should be_instance_of(YummyDummyCommand)
       end
 
-      it "should choose the correct default command whn none is given" do
+      it "should choose the correct default command when none is given" do
         CommandLine.select_command(["--anoption xpto"]).should be_instance_of(BuildCommand)
       end
 

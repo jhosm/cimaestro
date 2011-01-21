@@ -279,6 +279,7 @@ module CIMaestro
       end
     end
 
+    #? Shouldn't this class exist on a separate module? And have subclasses for each type of benchmarking?
     class Benchmark
 
       attr_reader :validation_error_message
@@ -316,6 +317,8 @@ module CIMaestro
           @validation_error_message = "Benchmark validation failed. Increased value from #{benchmark_value} to #{report_value}."
           return false
         end
+
+        #? What is the value 20 about? No magical numbers and no duplication of constants as literals please :)
         if @build_version > @benchmark_version then
           if report_value >= benchmark_value - 20 then
             @validation_error_message = "Benchmark validation failed. Build version (revision is ignored) has increased but the value obtained has not decreased by more than 20. #Benchmark Value: #{benchmark_value}. #Report Value: #{report_value}."

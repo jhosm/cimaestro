@@ -1,6 +1,6 @@
 =begin
 
-Notas:
+Notas (TODO):
 * ruote tem ruote-kit -> interface web de administração e serviço REST
 * ruote - investigar se oferece, de base, uma forma de consultar o histórico dos processos já executados.
 =end
@@ -20,21 +20,22 @@ engine = Ruote::Engine.new(
                 Ruote::FsStorage.new(
                         'ruote_work')))
 
-# Adicionar logger básico que subscreve as mensagens enviadas pelo ruote.
+# add basic logger which subscribes the messages sent by ruote
 engine.add_service('s_cimaestrologger', 'lib/cimaestro/ruote/puts_logger', 'PutsLogger')
 
-# spike para demonstrar como carregar customizaçõees específicas.
-engine.register_participant 'setup_build_specification' do |workitem|
+# spike showing how to load specific customizations
+engine.register_participant 'custom_build_specification' do |workitem|
   workitem.fields['custom_spec_wf'] = File.dirname(__FILE__) + "/custom_build_spec.rb" if File.exist?(File.dirname(__FILE__) + "/custom_build_spec.rb")
 end
 
-#participante por omissão
+# default participant
 engine.register_participant /.*/ do |workitem|
-   Log4r::Logger['simple'].debug "I received a message #{workitem.participant_name}"
+   Log4r::Logger['simple'].debug "I received a message from #{workitem.participant_name}"
 end
 
-# O processo de build do CIMaestro
-pdef = Ruote.process_definition :name => 'test' do
+# CIMaestro's build process
+pdef = Ruote.process_definition :name => 'cimaestro_build' do
+  #? What can be done concurrently?
   sequence do
     prepare_build_spec
     purge_working_directory
@@ -48,7 +49,7 @@ pdef = Ruote.process_definition :name => 'test' do
 
   define 'prepare_build_spec' do
     load_config
-    setup_build_specification
+    custom_build_specification
     subprocess :ref => '${custom_spec_wf}', :if => '${custom_spec_wf}'
   end
 
@@ -71,6 +72,7 @@ pdef = Ruote.process_definition :name => 'test' do
 
   define 'validate_dot_net' do
     run_dot_net_unit_tests
+    #? Can't the code analysis and the metrics computation start concurrently with build preparation?
     analyze_code
     compute_code_metrics
   end

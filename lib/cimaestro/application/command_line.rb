@@ -6,11 +6,15 @@ module CIMaestro
           puts "Usage: cimaestro [command] [options]"
           puts "---"
           puts "Available commands:"
-          ObjectSpace.each_object(Class) do |klass|
-            if klass.ancestors.include? CommandLineCommand and klass != CommandLineCommand then
-              command_desc = "  " + klass.to_s.split("::").last.gsub(/Command$/, '').downcase
+          ObjectSpace.each_object(Class) do |class_in_object_space|
+            # search all subclasses of CommandLineCommand
+            if class_in_object_space.ancestors.include? CommandLineCommand and class_in_object_space != CommandLineCommand then
+              # generate description for each subclass found by parsing its name plus the description it provides, for e.g.
+              # InstallCommand => "install <InstallCommand.new.desc>"
+              command_desc = "  " + class_in_object_space.to_s.split("::").last.gsub(/Command$/, '').downcase
               command_desc = command_desc.ljust(32)
-              command_desc << "- " << klass.new.desc if klass.method_defined?(:desc)
+              #? why isn't desc a class (static) method?
+              command_desc << "- " << class_in_object_space.new.desc if class_in_object_space.method_defined?(:desc)
               puts command_desc
             end
           end
@@ -26,18 +30,19 @@ module CIMaestro
             return nil
           end
 
+          # user is running the cimaestro command
           return BuildCommand.new if command.start_with?("--")
 
           command_class_name = ("CIMaestro::Application::#{command.to_s.camelize}Command")
           begin
-            klass = command_class_name.to_class
+            command_class = command_class_name.to_class
           rescue NameError
             raise UnknownApplicationCommandException, "Command '#{command}' is not supported."
           end
 
-          raise UnknownApplicationCommandException, "The class that should execute command '#{command}' is not a subclass of CommandLineCommand." unless klass.ancestors.include? CommandLineCommand
+          raise UnknownApplicationCommandException, "The class that should execute command '#{command}' is not a subclass of CommandLineCommand." unless command_class.ancestors.include? CommandLineCommand
 
-          result = klass.new
+          result = command_class.new
 
           result
         end
@@ -51,6 +56,7 @@ module CIMaestro
             end
           rescue ::CIMaestro::Exceptions::InvalidBuildSpecException => onse
             puts onse.message
+            # TODO: create method show_usage in CommandLineCommand
             command.run(['-h'])
             return 1
           rescue UnknownApplicationCommandException => uace
