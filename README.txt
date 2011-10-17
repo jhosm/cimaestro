@@ -1,7 +1,5 @@
 = cimaestro
 
-* http://www.cimaestro.com
-
 == DESCRIPTION:
 
 CIMaestro is a rake-based build system, with a heavy bias on convention over configuration. It has three main goals:
